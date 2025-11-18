@@ -1,0 +1,77 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+}
+
+/* Layout sections */
+header, footer {
+  background-color: #ccc;
+  padding: 1rem;
+  text-align: center;
+}
+nav {
+  background-color: #0077cc;
+}
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+nav li {
+  margin: 0.5rem;
+}
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+}
+nav.open ul {
+  flex-direction: column;
+}
+
+/* Sections */
+#section1 {
+  background-color: #8bc34a;
+  padding: 1rem;
+}
+#section2 {
+  background-color: #fff59d;
+  padding: 1rem;
+}
+#section3 {
+  background-color: #f48fb1;
+  padding: 1rem;
+}
+footer {
+  background-color: #ccc;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  nav ul {
+    display: none;
+    flex-direction: column;
+    background-color: #0077cc;
+  }
+  nav.open ul {
+    display: flex;
+  }
+  #menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+}
