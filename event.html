@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Support Tracker</title>
+    <link rel="stylesheet" href="event.css">
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <h1>Community Support Tracker</h1>
+        <button id="menu-toggle" aria-label="Toggle navigation">☰</button>
+      </div>
+    </header>
+
+    <nav id="navbar">
+      <ul>
+        <li><a href="donation.html">Donation Tracker</a></li>
+        <li><a href="volunteer.html">Volunteer Hours</a></li>
+        <li><a href="event.html" class="active">Event Signup</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section id="event-signup">
+        <h2>Event Signup Form</h2>
+        <form id="signup-form">
+          <label for="event_name">Event Name:</label>
+          <input type="text" id="event_name" name="event_name">
+
+          <label for="rep_name">Representative's Name:</label>
+          <input type="text" id="rep_name" name="rep_name">
+
+          <label for="rep_email">Representative's Email:</label>
+          <input type="email" id="rep_email" name="rep_email">
+
+          <label for="role">Select Role:</label>
+          <select id="role" name="role">
+            <option value="">--Please choose a role--</option>
+            <option value="sponsor">Sponsor</option>
+            <option value="participant">Participant</option>
+            <option value="organizer">Organizer</option>
+          </select>
+
+          <button type="submit">Sign Up</button>
+        </form>
+        
+        <div id="form-feedback"></div>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>&copy; 2025 PIXELL River Financial</p>
+    </footer>
+
+    <script>
+      // Simple toggle for mobile nav
+      document.getElementById('menu-toggle').addEventListener('click', () => {
+        document.getElementById('navbar').classList.toggle('open');
+      });
+    </script>
+  </body>
+</html>
