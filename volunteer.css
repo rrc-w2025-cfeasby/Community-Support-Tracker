@@ -1,4 +1,12 @@
-#section1 { 
+
+#volunteer_main {
+    background-color:#f9f9f9; 
+    color: white; 
+    padding: 20px; 
+    text-align: center; 
+    font-family: 'Arial', sans-serif; 
+}
+#section2 { 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6,22 +14,25 @@
     padding: 20px; 
     color: #333;
 }
-#section1 h2 { 
+#section2 h2 { 
 
     font-family: 'Arial', sans-serif;
     margin-bottom: 10px; 
 }
-#section1 p { 
+#section2 p { 
     font-size: 16px; 
     line-height: 1.5; 
 }
-#section1 ul { 
-    list-style-type: disc; 
-    padding-left: 20px; 
+label {
+    font-family: 'Arial', sans-serif; 
+    font-size: 16px; 
+    margin-top: 10px; 
+    display: inline-flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 5px;
+
 }
-#section1 ul li { 
-    margin-bottom: 8px; 
-} 
 
 #submit-button {
     width: 100%;
