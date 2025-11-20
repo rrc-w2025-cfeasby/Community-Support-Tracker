@@ -1,28 +1,31 @@
-/* Volunteer Form Validation Script */
+// Community-Support-Tracker/volunteer.js
 
-// Object to hold form field values
+// In-memory temporary data store
 const volunteerEntries = [];
 
-// Form validation function
-function validateVolunteerData({ charityName, hoursVolunteered, date, rating }) {
+/**
+ * Validate the volunteer form values.
+ * Returns an array of error messages (empty if valid).
+ */
+function validateVolunteerData({ charityName, date, hours, rating }) {
   const errors = [];
 
   // Required fields
   if (!charityName || charityName.trim() === "") {
     errors.push("Charity Name is required.");
   }
-  if (!hoursVolunteered || hoursVolunteered.toString().trim() === "") {
-    errors.push("Hours Volunteered is required.");
-  }
   if (!date || date.trim() === "") {
     errors.push("Date is required.");
+  }
+  if (!hours || hours.toString().trim() === "") {
+    errors.push("Hours Volunteered is required.");
   }
   if (!rating || rating.toString().trim() === "") {
     errors.push("Volunteer Experience Rating is required.");
   }
 
   // Hours: positive number
-  const hoursNum = Number(hoursVolunteered);
+  const hoursNum = Number(hours);
   if (isNaN(hoursNum) || hoursNum <= 0) {
     errors.push("Hours Volunteered must be a positive number.");
   }
@@ -36,75 +39,114 @@ function validateVolunteerData({ charityName, hoursVolunteered, date, rating }) 
   return errors;
 }
 
-function buildVolunteerEntry({ charityName, hoursVolunteered, date, rating }) {
+/**
+ * Pure data-processing function.
+ * Takes valid raw data and returns a normalized entry object.
+ */
+function buildVolunteerEntry({ charityName, date, hours, rating }) {
   return {
     id: Date.now(), // simple unique-ish ID
     charityName: charityName.trim(),
-    hours: Number(hoursVolunteered),
-    date,                      
+    date,
+    hours: Number(hours),
     rating: Number(rating),
   };
 }
 
-//show error summary
-function showErrors(errors) {
-  const errorList = document.getElementById("volunteer-errors");
-  if (!errorList) return;
-
-  // Clear previous errors
-  errorList.innerHTML = "";
-
-  if (errors.length === 0) {
-    errorList.style.display = "none";
-    return;
-  }
-
-  errors.forEach((msg) => {
-    const li = document.createElement("li");
-    li.textContent = msg;
-    errorList.appendChild(li);
+/**
+ * Clear all per-field error spans.
+ */
+function clearErrorSpans() {
+  const ids = ["charityName_error", "date_error", "hours_error", "rating_error"];
+  ids.forEach((id) => {
+    const span = document.getElementById(id);
+    if (span) {
+      span.textContent = "";
+      span.hidden = true;
+    }
   });
-
-  errorList.style.display = "block";
 }
 
+/**
+ * Show validation errors mapped to each field's <span>.
+ */
+function showValidationErrors(errors) {
+  clearErrorSpans();
+
+  errors.forEach((msg) => {
+    let spanId = null;
+
+    if (msg.includes("Charity Name")) {
+      spanId = "charityName_error";
+    } else if (msg.includes("Date")) {
+      spanId = "date_error";
+    } else if (msg.includes("Hours Volunteered")) {
+      spanId = "hours_error";
+    } else if (msg.includes("Volunteer Experience Rating")) {
+      spanId = "rating_error";
+    }
+
+    if (!spanId) return;
+    const span = document.getElementById(spanId);
+    if (!span) return;
+
+    span.textContent = msg;
+    span.hidden = false;
+  });
+}
+
+/**
+ * Handle form submission:
+ *  - prevent page reload
+ *  - collect data
+ *  - validate and show errors
+ *  - push normalized entry to volunteerEntries if valid
+ */
 function handleVolunteerSubmit(event) {
-  event.preventDefault(); // 1. Stop form from reloading the page
+  event.preventDefault();
 
-  const form = event.target;
+  const form = event.target || document.getElementById("volunteer-form");
+  if (!form) return;
 
-  // 2. Collect data
   const charityNameInput = form.querySelector("#charityName");
-  const hoursInput       = form.querySelector("#hoursVolunteered");
-  const dateInput        = form.querySelector("#volunteerDate");
-  const ratingInput      = form.querySelector("#experienceRating");
+  const dateInput = form.querySelector("#date");
+  const hoursInput = form.querySelector("#hours");
+  const ratingInputs = form.querySelectorAll("input[name='rating']");
+
+  let ratingValue = "";
+  ratingInputs.forEach((input) => {
+    if (input.checked) {
+      ratingValue = input.value;
+    }
+  });
 
   const rawData = {
     charityName: charityNameInput?.value ?? "",
-    hoursVolunteered: hoursInput?.value ?? "",
     date: dateInput?.value ?? "",
-    rating: ratingInput?.value ?? "",
+    hours: hoursInput?.value ?? "",
+    rating: ratingValue,
   };
 
-  // 3. Validate
   const errors = validateVolunteerData(rawData);
-  showErrors(errors);
 
   if (errors.length > 0) {
-    // 4. If errors, do not store anything
+    showValidationErrors(errors);
     return;
   }
 
-  // 5. Build normalized entry and store
+  // If valid, clear any old errors
+  clearErrorSpans();
+
   const entry = buildVolunteerEntry(rawData);
   volunteerEntries.push(entry);
 
-  // 6. Clear the form after success (optional)
   form.reset();
 }
 
-// Initialization function to set up event listeners
- function initVolunteerForm(formId = "volunteer-form") {
+/**
+ * Wire up the form submit handler.
+ */
+function initVolunteerForm(formId = "volunteer-form") {
   const form = document.getElementById(formId);
   if (!form) {
     console.warn(`Volunteer form with id="${formId}" not found.`);
@@ -114,10 +156,13 @@ function handleVolunteerSubmit(event) {
   form.addEventListener("submit", handleVolunteerSubmit);
 }
 
-export {
-  volunteerEntries,
-  validateVolunteerData,
-  buildVolunteerEntry,
-  handleVolunteerSubmit,
-  initVolunteerForm,
-};
+// Export for Jest (CommonJS) but keep browser compatibility.
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    volunteerEntries,
+    validateVolunteerData,
+    buildVolunteerEntry,
+    handleVolunteerSubmit,
+    initVolunteerForm,
+  };
+}

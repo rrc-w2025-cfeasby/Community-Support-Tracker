@@ -87,13 +87,12 @@
       document.getElementById('navbar').classList.toggle('open');
     });
   </script>
-  <script type="module">
-    import { initVolunteerForm } from "./volunteer.js";
-
-    document.addEventListener("DOMContentLoaded", () => {
-      initVolunteerForm();
+  <script src="volunteer.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      initVolunteerForm(); // uses the global function defined in volunteer.js
     });
-</script>
+  </script>
 
 
 </body>
