@@ -29,22 +29,24 @@
         <h2>Volunteer Hours Tracker</h2>
         <p>Keep track of your volunteer hours and contributions to the community.</p>
         <form id="volunteer-form">
+          <!-- Charity Name -->
           <div>
             <label for="charityName">Charity Name:</label>
             <input type="text" id="charityName" name="charityName" />
             <span id="charityName_error" class="error-message"></span>
           </div>
+          <!-- Date -->
           <div>
             <label for="date">Date:</label>
             <input type="date" id="date" name="date" />
             <span id="date_error" class="error-message"></span>
           </div>
+          <!-- Hours Volunteered -->
           <div>   
             <label for="hours">Hours Volunteered:</label>
             <input type="number" id="hours" name="hours" min="1" />
             <span id="hours_error" class="error-message"></span>
           </div>
-          
           <!-- Rating: 1–5 -->
           <fieldset>
             <legend>Volunteer Experience Rating (1–5 Stars)</legend>

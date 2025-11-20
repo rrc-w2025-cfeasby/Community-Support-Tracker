@@ -20,15 +20,16 @@ const getSelectedRadioValue = (radioNodeList) => {
     return null;
 };
 
-const showError = (fieldName, message) => {
-    const errorField = document.getElementById(`${fieldName}_error`);
+const showError = (charityName, message) => {
+    const errorField = document.getElementById(`${charityName}_error`);
     if (!errorField) {
-        console.error(`Error field '${fieldName}_error' not found.`);
+        console.error(`Error field '${charityName}_error' not found.`);
         return;
     }
     errorField.textContent = message;
     errorField.classList.add("error-visible");
 };
+
 
 const clearAllErrors = () => {
     document.querySelectorAll(".error-message").forEach((el) => {
@@ -133,6 +134,15 @@ const validateVolunteerForm = () => {
     return isValid;
 }
 
+// Live update of rating display
+
+document.querySelectorAll('input[name="rating"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.getElementById('rating_error').textContent = 
+        `You selected ${radio.value} star(s).`;
+    });
+  });
+
 // Main form submission handler
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -173,3 +183,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+export { 
+    volunteerEntries,
+    validateVolunteerForm,
+    updateFieldsFromForm,
+    isNotEmpty,
+    isPositiveNumber,
+    isValidRating,
+    isRadioSelected,
+    isAlphabetic,
+    isLengthInRange,
+    validateDateFormat,
+    showError,
+    clearAllErrors,
+    setupLiveErrorClearing
+
+};
