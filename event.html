@@ -25,24 +25,35 @@
     <main>
       <section id="event-signup">
         <h2>Event Signup Form</h2>
-        <form id="signup-form">
-          <label for="event_name">Event Name:</label>
-          <input type="text" id="event_name" name="event_name">
+        <form id="signup-form" novalidate>
+          <div class="field-group">
+            <label for="event_name">Event Name:</label>
+            <input type="text" id="event_name" name="event_name">
+            <div class="error" id="event_name_error"></div>
+          </div>
 
-          <label for="rep_name">Representative's Name:</label>
-          <input type="text" id="rep_name" name="rep_name">
-
-          <label for="rep_email">Representative's Email:</label>
-          <input type="email" id="rep_email" name="rep_email">
-
-          <label for="role">Select Role:</label>
-          <select id="role" name="role">
-            <option value="">--Please choose a role--</option>
-            <option value="sponsor">Sponsor</option>
-            <option value="participant">Participant</option>
-            <option value="organizer">Organizer</option>
-          </select>
-
+          <div class="field-group">
+            <label for="rep_name">Representative's Name:</label>
+            <input type="text" id="rep_name" name="rep_name">
+            <div class="error" id="rep_name_error"></div>
+          </div>
+          
+          <div class="field-group">
+            <label for="rep_email">Representative's Email:</label>
+            <input type="text" id="rep_email" name="rep_email">
+            <div class="error" id="rep_email_error"></div>
+          </div>
+          
+          <div class="field-group">
+            <label for="role">Select Role:</label>
+            <select id="role" name="role">
+              <option value="">--Please choose a role--</option>
+              <option value="sponsor">Sponsor</option>
+              <option value="participant">Participant</option>
+              <option value="organizer">Organizer</option>
+            </select>
+            <div class="error" id="role_error"></div>
+          </div>
           <button type="submit">Sign Up</button>
         </form>
         
@@ -61,5 +72,6 @@
         document.getElementById('navbar').classList.toggle('open');
       });
     </script>
+    <script src="event.js"></script>
   </body>
 </html>

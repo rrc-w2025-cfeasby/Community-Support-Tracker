@@ -146,6 +146,25 @@ button[type="submit"]:hover {
     text-align: center;
 }
 
+#form-feedback p {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: red;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+}
+
+.field-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   header{
