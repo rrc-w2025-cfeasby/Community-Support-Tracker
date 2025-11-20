@@ -3,199 +3,121 @@
 // Object to hold form field values
 const volunteerEntries = [];
 
-// Current field values
-const fields = {
-    charityName: '',
-    date: '',
-    hours: '',
-    rating: ''
-};
-// Helper functions
-const getSelectedRadioValue = (radioNodeList) => {
-    for (const radio of radioNodeList) {
-        if (radio.checked) {
-            return radio.value;
-        }
-    }
-    return null;
-};
+// Form validation function
+function validateVolunteerData({ charityName, hoursVolunteered, date, rating }) {
+  const errors = [];
 
-const showError = (charityName, message) => {
-    const errorField = document.getElementById(`${charityName}_error`);
-    if (!errorField) {
-        console.error(`Error field '${charityName}_error' not found.`);
-        return;
-    }
-    errorField.textContent = message;
-    errorField.classList.add("error-visible");
-};
+  // Required fields
+  if (!charityName || charityName.trim() === "") {
+    errors.push("Charity Name is required.");
+  }
+  if (!hoursVolunteered || hoursVolunteered.toString().trim() === "") {
+    errors.push("Hours Volunteered is required.");
+  }
+  if (!date || date.trim() === "") {
+    errors.push("Date is required.");
+  }
+  if (!rating || rating.toString().trim() === "") {
+    errors.push("Volunteer Experience Rating is required.");
+  }
 
+  // Hours: positive number
+  const hoursNum = Number(hoursVolunteered);
+  if (isNaN(hoursNum) || hoursNum <= 0) {
+    errors.push("Hours Volunteered must be a positive number.");
+  }
 
-const clearAllErrors = () => {
-    document.querySelectorAll(".error-message").forEach((el) => {
-        el.textContent = "";
-        el.classList.remove("error-visible");
-    });
-};
+  // Rating: 1–5
+  const ratingNum = Number(rating);
+  if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+    errors.push("Volunteer Experience Rating must be a number between 1 and 5.");
+  }
 
-// Make inputs clear their own error as the user types/changes
-const setupLiveErrorClearing = () => {
-    document.querySelectorAll("input, select, textarea").forEach((el) => {
-        const key = el.name || el.id;
-        if (!key) return;
-
-        el.addEventListener("input", () => {
-            const errorField = document.getElementById(`${key}_error`);
-            if (errorField) {
-                errorField.textContent = "";
-                errorField.classList.remove("error-visible");
-            }
-        });
-
-        el.addEventListener("change", () => {
-            const errorField = document.getElementById(`${key}_error`);
-            if (errorField) {
-                errorField.textContent = "";
-                errorField.classList.remove("error-visible");
-            }
-        });
-    });
-};
-
-// Simple value helpers (now they work with strings, not elements)
-const isNotEmpty = (value) => value && value.trim() !== "";
-const isPositiveNumber = (value) => !isNaN(value) && Number(value) > 0;
-const isValidRating = (value) => !isNaN(value) && Number.isInteger(Number(value));
-const isRadioSelected = (value) => value !== null;
-const isAlphabetic = (str) => /^[A-Za-z\s]+$/.test(str);
-const isLengthInRange = (str, min, max) => str.length >= min && str.length <= max;
-const validateDateFormat = (dateString) => /^\d{4}-\d{2}-\d{2}$/.test(dateString);
-
-const updateFieldsFromForm = () => {
-    fields.charityName = document.getElementById("charityName").value;
-    fields.date = document.getElementById("date").value;
-    fields.hours = document.getElementById("hours").value;
-
-    const ratingInputs = document.getElementsByName("rating");
-    fields.rating = getSelectedRadioValue(ratingInputs);
-};
-
-const validateVolunteerForm = () => {
-    let isValid = true;
-
-    // Charity Name
-    if (!fields.charityName || fields.charityName.trim() === "")  {
-        showError('charityName', 'Charity name is required.');
-        isValid = false;
-    } else if (!isAlphabetic(fields.charityName)) {
-        showError('charityName', 'Charity name must contain only alphabetic characters and spaces.');
-        isValid = false;
-    } else if (!isLengthInRange(fields.charityName, 2, 50)) {
-        showError('charityName', 'Charity name must be between 2 and 50 characters long.');
-        isValid = false;
-    }
-
-    // Date
-    
-    if (!isNotEmpty(fields.date)) {
-        showError('date', 'Date is required.');
-        isValid = false;
-    } else if (!validateDateFormat(fields.date)) {
-        showError('date', 'Date must be in YYYY-MM-DD format.');
-        isValid = false;
-    }
-    // Hours Volunteered
-    
-    if (!isNotEmpty(fields.hours)) {
-        showError('hours', 'Hours volunteered is required.');
-        isValid = false;
-    } else if (!isPositiveNumber(fields.hours)) {
-        showError('hours', 'Hours volunteered must be a positive number.');
-        isValid = false;
-    } else if ((Number(fields.hours) > 24) || (Number(fields.hours) <= 0)) {
-        showError('hours', 'Hours volunteered must be between 0 and 24.');
-        isValid = false;
-    }
-
-    // Rating
-
-    if (!isRadioSelected(fields.rating)) {
-        showError('rating', 'Please select a rating.');
-        isValid = false;
-    } else if (!isValidRating(fields.rating)) {
-        showError('rating', 'Invalid rating selected.');
-        isValid = false;
-    } else if (fields.rating < 1 || fields.rating > 5) {
-        showError('rating', 'Rating must be between 1 and 5.');
-        isValid = false;
-    }
-
-
-    return isValid;
+  return errors;
 }
 
-// Live update of rating display
+function buildVolunteerEntry({ charityName, hoursVolunteered, date, rating }) {
+  return {
+    id: Date.now(), // simple unique-ish ID
+    charityName: charityName.trim(),
+    hours: Number(hoursVolunteered),
+    date,                      
+    rating: Number(rating),
+  };
+}
 
-document.querySelectorAll('input[name="rating"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      document.getElementById('rating_error').textContent = 
-        `You selected ${radio.value} star(s).`;
-    });
+//show error summary
+function showErrors(errors) {
+  const errorList = document.getElementById("volunteer-errors");
+  if (!errorList) return;
+
+  // Clear previous errors
+  errorList.innerHTML = "";
+
+  if (errors.length === 0) {
+    errorList.style.display = "none";
+    return;
+  }
+
+  errors.forEach((msg) => {
+    const li = document.createElement("li");
+    li.textContent = msg;
+    errorList.appendChild(li);
   });
 
-// Main form submission handler
+  errorList.style.display = "block";
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-    const volunteerForm = document.getElementById("volunteer-form");
-    if (!volunteerForm) {
-        console.error("volunteer-form not found");
-        return;
-    }
+function handleVolunteerSubmit(event) {
+  event.preventDefault(); // 1. Stop form from reloading the page
 
-    setupLiveErrorClearing();
+  const form = event.target;
 
-    volunteerForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        clearAllErrors();
+  // 2. Collect data
+  const charityNameInput = form.querySelector("#charityName");
+  const hoursInput       = form.querySelector("#hoursVolunteered");
+  const dateInput        = form.querySelector("#volunteerDate");
+  const ratingInput      = form.querySelector("#experienceRating");
 
-        // Read the form into `fields`
-        updateFieldsFromForm();
+  const rawData = {
+    charityName: charityNameInput?.value ?? "",
+    hoursVolunteered: hoursInput?.value ?? "",
+    date: dateInput?.value ?? "",
+    rating: ratingInput?.value ?? "",
+  };
 
-        if (validateVolunteerForm()) {
-            // Build a normalized entry object
-            const entry = {
-                charityName: fields.charityName.trim(),
-                date: fields.date,
-                hours: Number(fields.hours),
-                rating: Number(fields.rating)
-            };
+  // 3. Validate
+  const errors = validateVolunteerData(rawData);
+  showErrors(errors);
 
-            // Store it temporarily
-            volunteerEntries.push(entry);
+  if (errors.length > 0) {
+    // 4. If errors, do not store anything
+    return;
+  }
 
-            console.log("Form submitted successfully.", entry);
-            console.log("All volunteer entries:", volunteerEntries);
+  // 5. Build normalized entry and store
+  const entry = buildVolunteerEntry(rawData);
+  volunteerEntries.push(entry);
 
-            // Optionally reset the form
-            volunteerForm.reset();
-        } else {
-            console.log("Form submission missed some fields.");
-        }
-    });
-});
-export { 
-    volunteerEntries,
-    validateVolunteerForm,
-    updateFieldsFromForm,
-    isNotEmpty,
-    isPositiveNumber,
-    isValidRating,
-    isRadioSelected,
-    isAlphabetic,
-    isLengthInRange,
-    validateDateFormat,
-    showError,
-    clearAllErrors,
-    setupLiveErrorClearing
+  // 6. Clear the form after success (optional)
+  form.reset();
+}
 
+// Initialization function to set up event listeners
+ function initVolunteerForm(formId = "volunteer-form") {
+  const form = document.getElementById(formId);
+  if (!form) {
+    console.warn(`Volunteer form with id="${formId}" not found.`);
+    return;
+  }
+
+  form.addEventListener("submit", handleVolunteerSubmit);
+}
+
+export {
+  volunteerEntries,
+  validateVolunteerData,
+  buildVolunteerEntry,
+  handleVolunteerSubmit,
+  initVolunteerForm,
 };

@@ -33,19 +33,19 @@
           <div class="field">
             <label for="charityName">Charity Name:</label>
             <input type="text" id="charityName" name="charityName" />
-            <span id="charityName_error" class="error-message"></span>
+            <span id="charityName_error" class="error-message" hidden></span>
           </div>
           <!-- Date -->
           <div class="field">
             <label for="date">Date:</label>
             <input type="date" id="date" name="date" />
-            <span id="date_error" class="error-message"></span>
+            <span id="date_error" class="error-message" hidden></span>
           </div>
           <!-- Hours Volunteered -->
           <div class="field">   
             <label for="hours">Hours Volunteered:</label>
             <input type="number" id="hours" name="hours" min="1" />
-            <span id="hours_error" class="error-message"></span>
+            <span id="hours_error" class="error-message" hidden></span>
           </div>
           <!-- Rating: 1–5 -->
           <div class="field">
@@ -68,7 +68,7 @@
               <label for="star1">★</label>
             </div>
 
-            <span id="rating_error" class="error-message"></span>
+            <span id="rating_error" class="error-message" hidden></span>
           </fieldset>
           </div>
           <button id="submit-button" type="submit">Submit</button>
@@ -81,18 +81,21 @@
     <p>&copy; 2025 PIXELL River Financial</p>
   </footer>
 
-  <script type="module">
-    import { initializeVolunteerForm } from './volunteer.js';
-    const form = document.getElementById("volunteer-form");
-    initializeVolunteerForm(form);
-
-    // Simple toggle for mobile nav
+  <script>
+   // Simple toggle for mobile nav
     document.getElementById('menu-toggle').addEventListener('click', () => {
       document.getElementById('navbar').classList.toggle('open');
     });
   </script>
-  <script src="volunteer.js"></script>
-  <script src="volunteer_test.js"></script>
+  <script type="module">
+    import { initVolunteerForm } from "./volunteer.js";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initVolunteerForm();
+    });
+</script>
+
+
 </body>
 
 </html>
