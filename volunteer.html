@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Community Support Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="template.css" />
+  <link rel="stylesheet" href="volunteer.css" />
 </head>
 <body>
   <header>
@@ -22,7 +23,23 @@
 
   <main>
     <section id="section1">
-      <!-- Component-specific content goes here -->
+      <h2>Volunteer Hours Tracker</h2>
+      <p>Keep track of your volunteer hours and contributions to the community.</p>
+      <form id="volunteer-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"/>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" />
+
+        <label for="hours">Hours Volunteered:</label>
+        <input type="number" id="hours" name="hours" min="1"/>
+
+        <label for="volunteer_experience_rating">Volunteer Experience Rating (1-5):</label>
+        <input type="number" id="volunteer_experience_rating" name="volunteer_experience_rating" min="1" max="5"/>
+
+        <button id="submit-button" type="submit">Submit</button>
+      </form>
     </section>
     <section id="section2">
       <!-- More content or summary -->
