@@ -1,138 +1,128 @@
 /* Reset and base styles */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
 body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #F9F9F9;
 }
 
 /* Layout sections */
 header, footer {
-  background-color: #ccc;
-  padding: 1rem;
-  text-align: center;
+    background-color: #CCC;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
 }
+
 nav {
-  background-color: #0077cc;
+    background-color: #0077CC;
 }
+
 nav ul {
-  display: flex;
-  justify-content: center;
-  list-style: none;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    background-color: #0077CC;
+    padding: 0.5rem 0;
 }
+
 nav li {
-  margin: 0.5rem;
+   margin: 0.5rem;
 }
+
 nav a {
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
 }
+
+nav a.active{
+    background-color: #005FA3;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    color: #FFFFFF;
+}
+
 nav.open ul {
-  flex-direction: column;
+   flex-direction: column;
 }
 
 /* Sections */
-#section1, section{
-  background-color: #8bc34a;
-  padding: 1rem;
+#section1 {
+    background-color: #8BC34A;
+    padding: 1rem;
 }
+
 #section2 {
-  background-color: #fff59d;
-  padding: 1rem;
+    background-color: #FFF59D;
+    padding: 1rem;
 }
+
 #section3 {
-  background-color: #f48fb1;
-  padding: 1rem;
+    background-color: #F48FB1;
+    padding: 1rem;
 }
-
-.field1 {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  margin: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 100;
-}
-
-#subBtn1 {
-  width: 200px;
-  height: 30px;
-  position: relative;
-}
-
-.records-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.donation-card {
-  border: 1px solid #ddd;
-  background: #fafafa;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  flex: 0 1 280px;
-  border-left: 4px solid #3b82f6;
-  padding: .8rem 1rem;
-  border-radius: 4px;
-}
-
-.donation-card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-}
-
-.card-field {
-  margin: 5px 0;
-}
-
-.card-label {
-  font-weight: bold;
-}
-
-.delete-btn {
-  background: #d9534f;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin-top: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.delete-btn:hover {
-  background: #c9302c;
-}
-
 
 footer {
-  background-color: #ccc;
-  padding: 1rem;
-  text-align: center;
+    background-color: #CCC;
+    padding: 1rem;
+    text-align: center;
 }
 
- /* Div */
+#menu-toggle {
+    display: none;
+}
 
 /* Mobile styles */
 @media (max-width: 768px) {
+  header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      text-align: left;
+  }
+
+  header h1{
+      font-size: 1.2rem;
+      margin: 0;
+  }
+
+  .header-content{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  }
+
   nav ul {
-    display: none;
-    flex-direction: column;
-    background-color: #0077cc;
+      display: none;
+      flex-direction: column;
+      background-color: #0077CC;
+      padding: 1rem 0;
   }
+
   nav.open ul {
-    display: flex;
+     display: flex;
   }
+
+  nav li {
+    margin: 0.5rem 0;
+  }
+
   #menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+      display: block;
+      position: absolute;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
   }
 }
