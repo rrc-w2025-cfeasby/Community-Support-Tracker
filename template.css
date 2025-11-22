@@ -1,0 +1,138 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+}
+
+/* Layout sections */
+header, footer {
+  background-color: #ccc;
+  padding: 1rem;
+  text-align: center;
+}
+nav {
+  background-color: #0077cc;
+}
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+nav li {
+  margin: 0.5rem;
+}
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+}
+nav.open ul {
+  flex-direction: column;
+}
+
+/* Sections */
+#section1, section{
+  background-color: #8bc34a;
+  padding: 1rem;
+}
+#section2 {
+  background-color: #fff59d;
+  padding: 1rem;
+}
+#section3 {
+  background-color: #f48fb1;
+  padding: 1rem;
+}
+
+.field1 {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 100;
+}
+
+#subBtn1 {
+  width: 200px;
+  height: 30px;
+  position: relative;
+}
+
+.records-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.donation-card {
+  border: 1px solid #ddd;
+  background: #fafafa;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex: 0 1 280px;
+  border-left: 4px solid #3b82f6;
+  padding: .8rem 1rem;
+  border-radius: 4px;
+}
+
+.donation-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.card-field {
+  margin: 5px 0;
+}
+
+.card-label {
+  font-weight: bold;
+}
+
+.delete-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #c9302c;
+}
+
+
+footer {
+  background-color: #ccc;
+  padding: 1rem;
+  text-align: center;
+}
+
+ /* Div */
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  nav ul {
+    display: none;
+    flex-direction: column;
+    background-color: #0077cc;
+  }
+  nav.open ul {
+    display: flex;
+  }
+  #menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+}

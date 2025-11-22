@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Support Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Community Support Tracker</h1>
+    <button id="menu-toggle" aria-label="Toggle navigation">☰</button>
+  </header>
+
+  <nav id="navbar">
+    <ul>
+      <li><a href="donation.html">Donation Tracker</a></li>
+      <li><a href="volunteer.html">Volunteer Hours</a></li>
+      <li><a href="event.html">Event Signup</a></li>
+    </ul>
+  </nav>
+
+  <main>
+      <section id="section1">
+       <!-- Component-specific content goes here -->
+    </section>
+
+    <section id="section2">
+      <!-- More content or summary -->
+    </section>
+    <section id="section3">
+      <!-- Optional third section for mobile layout -->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 PIXELL River Financial</p>
+  </footer>
+
+  <script>
+    // Simple toggle for mobile nav
+    document.getElementById('menu-toggle')?.addEventListener('click', () => {
+      document.getElementById('navbar')?.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
