@@ -4,7 +4,6 @@
 
 const {
   volunteerEntries,
-  initVolunteerForm, // not strictly needed but fine to import
   validateVolunteerData,
   buildVolunteerEntry,
   handleVolunteerSubmit,
@@ -127,9 +126,8 @@ describe("volunteer form submission", () => {
   });
 });
 
-//
+
 // UNIT TESTS
-//
 
 describe("validateVolunteerData", () => {
   test("identifies empty required fields", () => {

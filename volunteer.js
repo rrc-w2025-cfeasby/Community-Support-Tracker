@@ -39,13 +39,11 @@ function validateVolunteerData({ charityName, date, hours, rating }) {
   return errors;
 }
 
-/**
- * Pure data-processing function.
- * Takes valid raw data and returns a normalized entry object.
- */
+// Pure data-processing function.
+// Takes valid raw data and returns a normalized entry object.
 function buildVolunteerEntry({ charityName, date, hours, rating }) {
   return {
-    id: Date.now(), // simple unique-ish ID
+    id: Date.now(), 
     charityName: charityName.trim(),
     date,
     hours: Number(hours),
@@ -53,10 +51,8 @@ function buildVolunteerEntry({ charityName, date, hours, rating }) {
   };
 }
 
-/**
- * Clear all per-field error spans.
- */
-function clearErrorSpans() {
+// Clear all per-field error spans.
+ function clearErrorSpans() {
   const ids = ["charityName_error", "date_error", "hours_error", "rating_error"];
   ids.forEach((id) => {
     const span = document.getElementById(id);
@@ -67,9 +63,8 @@ function clearErrorSpans() {
   });
 }
 
-/**
- * Show validation errors mapped to each field's <span>.
- */
+
+//Show validation errors mapped to each field's <span>.
 function showValidationErrors(errors) {
   clearErrorSpans();
 
@@ -113,6 +108,7 @@ function handleVolunteerSubmit(event) {
   const hoursInput = form.querySelector("#hours");
   const ratingInputs = form.querySelectorAll("input[name='rating']");
 
+  // Get selected rating value
   let ratingValue = "";
   ratingInputs.forEach((input) => {
     if (input.checked) {
@@ -120,6 +116,7 @@ function handleVolunteerSubmit(event) {
     }
   });
 
+  // Collect raw data
   const rawData = {
     charityName: charityNameInput?.value ?? "",
     date: dateInput?.value ?? "",
@@ -127,6 +124,7 @@ function handleVolunteerSubmit(event) {
     rating: ratingValue,
   };
 
+  // Validate
   const errors = validateVolunteerData(rawData);
 
   if (errors.length > 0) {
@@ -143,9 +141,7 @@ function handleVolunteerSubmit(event) {
   form.reset();
 }
 
-/**
- * Wire up the form submit handler.
- */
+//  Wire up the form submit handler.
 function initVolunteerForm(formId = "volunteer-form") {
   const form = document.getElementById(formId);
   if (!form) {
