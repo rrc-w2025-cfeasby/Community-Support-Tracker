@@ -61,10 +61,8 @@ beforeEach(() => {
   // We don't rely on the event listener in tests; we call handleVolunteerSubmit directly.
 });
 
-//
 // INTEGRATION TESTS
-//
-
+// Simulate full form submission flow
 describe("volunteer form submission", () => {
   test("submitting valid form updates the temporary data object correctly", () => {
     const form = document.getElementById("volunteer-form");
@@ -100,7 +98,9 @@ describe("volunteer form submission", () => {
     );
     expect(typeof entry.id).toBe("number");
   });
+  
 
+// test 
   test("submitting invalid or incomplete data shows validation errors in the DOM", () => {
     const form = document.getElementById("volunteer-form");
 
@@ -128,7 +128,6 @@ describe("volunteer form submission", () => {
 
 
 // UNIT TESTS
-
 describe("validateVolunteerData", () => {
   test("identifies empty required fields", () => {
     const errors = validateVolunteerData({
