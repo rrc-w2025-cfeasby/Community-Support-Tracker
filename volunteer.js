@@ -1,4 +1,10 @@
-// Community-Support-Tracker/volunteer.js
+/*
+  Volunteer Form Handling Script
+  - Validates form inputs
+  - Shows validation errors
+  - Stores valid entries in an in-memory array
+  Author: Kailine Lima 
+*/
 
 // In-memory temporary data store
 const volunteerEntries = [];
