@@ -63,7 +63,6 @@ function buildVolunteerEntry({ charityName, date, hours, rating }) {
   });
 }
 
-
 //Show validation errors mapped to each field's <span>.
 function showValidationErrors(errors) {
   clearErrorSpans();
