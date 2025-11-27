@@ -1,7 +1,50 @@
 // Community-Support-Tracker/volunteer.js
 
+// Constants
+const VOLUNTEER_STORAGE_KEY = "volunteerEntries";
+
 // In-memory temporary data store
 const volunteerEntries = [];
+
+
+// LocalStorage helpers
+ function localEntriesStorage(charityName, date, hours, rating) {
+  const raw = localStorage.getItem(VOLUNTEER_STORAGE_KEY);
+  if (raw) {
+    return[];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+  } catch (e) {
+    console.error("Error parsing volunteer entries from localStorage:", e);
+  }
+  return [];
+}
+
+// Sync in-memory entries from localStorage
+function syncEntriesFromStorage() {
+  const storedEntries = localEntriesStorage();
+  volunteerEntries.length = 0;
+  volunteerEntries.push(...storedEntries);
+}
+
+// Save in-memory entries to localStorage
+function saveEntriesToStorage() {
+  localStorage.setItem(VOLUNTEER_STORAGE_KEY, JSON.stringify(volunteerEntries));
+}
+
+//  Calculate total volunteer hours
+function calculateTotalHours() {
+  return volunteerEntries.reduce(
+    (sum, entry) => sum + Number(entry.hours || 0),
+    0
+  );
+} 
+
 
 /**
  * Validate the volunteer form values.
@@ -152,13 +195,47 @@ function initVolunteerForm(formId = "volunteer-form") {
   form.addEventListener("submit", handleVolunteerSubmit);
 }
 
+// Initialize the volunteer tracker app
+function initVolunteerTracker() {
+  syncEntriesFromStorage();
+  renderTable();
+  initVolunteerForm();
+}
+
+// Attach everything once DOM is ready
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    initVolunteerTracker();
+
+    const table = document.querySelector("#volunteerTable");
+    if (table) {
+      table.addEventListener("click", (e) => {
+        if (e.target.classList.contains("deleteBtn")) {
+          const index = e.target.getAttribute("data-index");
+          deleteLog(index);
+        }
+      });
+    }
+  });
+}
+
+
 // Export for Jest (CommonJS) but keep browser compatibility.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
+    VOLUNTEER_STORAGE_KEY,
     volunteerEntries,
     validateVolunteerData,
     buildVolunteerEntry,
     handleVolunteerSubmit,
     initVolunteerForm,
+    localEntriesStorage,
+    syncEntriesFromStorage,
+    saveEntriesToStorage,
+    calculateTotalHours,
+    renderTable,
+    updateSummary,
+    deleteLog,
+    initVolunteerTracker,
   };
 }
