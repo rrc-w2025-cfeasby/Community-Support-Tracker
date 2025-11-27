@@ -149,11 +149,11 @@ button[type="submit"]:hover {
 #form-feedback p {
     margin-top: 1rem;
     font-weight: bold;
-    color: red;
+    color: #d32f2f;
 }
 
 .error {
-  color: red;
+  color: #d32f2f;
   font-size: 0.9rem;
   margin-top: 0.1rem;
 }

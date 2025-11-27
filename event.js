@@ -138,7 +138,7 @@ function handleFormSubmit(event) {
         const p = document.createElement('p');
         p.textContent = 'Please correct the errors above.';
 
-        p.style.color = 'red';
+        p.style.color = "#d32f2f";
         feedbackDiv.appendChild(p);
         return;
     }
