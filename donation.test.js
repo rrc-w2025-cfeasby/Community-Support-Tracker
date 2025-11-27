@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const { validateForm, saveToLocalStorage, getFormData } = require("./script1");
+const { validateForm, saveToLocalStorage, getFormData } = require("./donation");
 
 describe("Form validation", () => {
     beforeEach(() => {
