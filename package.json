@@ -1,9 +1,33 @@
 {
+<<<<<<< HEAD
+  "name": "community-support-tracker",
+  "version": "1.0.0",
+  "description": "Front End Group Project",
+  "main": "event.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rrc-w2025-cfeasby/Community-Support-Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rrc-w2025-cfeasby/Community-Support-Tracker/issues"
+  },
+  "homepage": "https://github.com/rrc-w2025-cfeasby/Community-Support-Tracker#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+=======
   "scripts": {
     "test": "jest"
   },
   "devDependencies": {
     "jest": "^30.2.0",
+>>>>>>> main
     "jest-environment-jsdom": "^30.2.0"
   }
 }
