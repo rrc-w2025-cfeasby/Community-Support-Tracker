@@ -41,14 +41,25 @@ nav ul {
   justify-content: center;
   list-style: none;
 }
+
 nav li {
   margin: 0.5rem;
 }
+
 nav a {
   color: white;
   text-decoration: none;
   padding: 0.5rem 1rem;
 }
+
+nav a.active{
+    background-color: #005FA3;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    color: #FFFFFF;
+}
+
+
 nav.open ul {
   flex-direction: column;
 }
@@ -116,6 +127,7 @@ textarea {
   flex:  0 0 150px;
   text-align: left;
 }
+
 #subBtn1 {
   font-size: 1.2rem;
   font-weight: bold;
