@@ -5,7 +5,6 @@
  */
 
 // Validation of form
-
 function validateForm(data) {
     const {charityName, donationAmount, donationDate} = data;
 
@@ -24,7 +23,6 @@ function validateForm(data) {
 
 
 // Collect form data
-
 function getFormData() {
     return {
         charityName: document.getElementById("charityname").value.trim(),
@@ -43,7 +41,7 @@ function saveToLocalStorage(data) {
 
 // Show donation records on webpage
 function renderDonationCards() {
-    let records = JSON.parse(localStorage.getItem("donationRecords"))
+    let records = JSON.parse(localStorage.getItem("donationRecords")) || [];
 
     const container = document.getElementById("records");
     if (!container) return;
@@ -157,11 +155,13 @@ if (typeof window !=="undefined" && window.document) {
 
 
 // Export for test
-module.exports = {
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
     validateForm,
     saveToLocalStorage,
     renderDonationCards,
     deleteRecord,
     getFormData
-};
+  };
+}
 

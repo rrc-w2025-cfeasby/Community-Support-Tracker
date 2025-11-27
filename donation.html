@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,61 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Tracker</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="donation.css">
 </head>
 <body>
- <header>
+  <header>
     <h1>Community Support Tracker</h1>
     <button id="menu-toggle" aria-label="Toggle navigation">☰</button>
   </header>
 
     <nav id="navbar">
         <ul>
+            <li><a href="index.html">Home</a></li>
             <li><a href="donation.html" class="active">Donation Tracker</a></li>
             <li><a href="volunteer.html">Volunteer Hours</a></li>
             <li><a href="event.html">Event Signup</a></li>
-            <li><a href="index.html">Home</a></li>
         </ul>
     </nav>
   <section id="section1">
-      <!-- Component-specific content goes here -->
-      <form>
-        <fieldset>
-          <legend>Donation Details</legend>
-
-          <!-- Charity Name -->
-           <div class="field1">
-            <label for="charityname">Charity Name <span class="required" aria-hidden="true"></span></label>
-            <input type="text" id="charityname" name="charityName" placeholder="e.g., Alice Smith" required aria-required="true" />
-        </div>
-
-        <!-- Donation Amount -->
-         <div class="field1">
-            <label for="donationamount">Donation Amount<span class="required" aria-hidden="true">*</span></label>
-            <input type="number" id="donationamount" name="donationAmount" placeholder="e.g., 50.00" required>
-            </div>
-
-        <!-- Date of Donation -->
-         <div class="field1">
-            <label for="donationdate">Date of Donation<span class="required" aria-hidden="true"></span></label>
-            <input type="date" id="donationdate" name="donationDate" required aria-required="true">
-        </div>
-
-        <!-- Donor Comment/Message (optional) -->
-         <div class="field1">
-            <label for="donorcomment">Donor Comment/Message</label>
-            <textarea name="donorComment" id="donorcomment" placeholder="Please leave a message with your donation (optional)" maxlength="100">
-            </textarea>
-         </div>
-
-        <button id="subBtn1" type="submit">Submit Donation</button>
-        </fieldset>
-      </form>
-    </section>
-
-    <section id="records-section">
-      <h2>Donation Records</h2>
-      <div id="records" class="records-container"></div>
-    </section>
+    <!-- Component-specific content goes here -->
+    <form id="donation_main">
+      <h2>Donation Entry Form</h2>
+      <!-- Charity Name -->
+      <div class="field-group">
+          <label for="charityname">Charity Name <span class="required" aria-hidden="true"></span></label>
+          <input type="text" id="charityname" name="charityName" placeholder="e.g., Alice Smith" aria-required="true" />
+      </div>
+      <!-- Donation Amount -->
+      <div class="field-group">
+          <label for="donationamount">Donation Amount<span class="required" aria-hidden="true">*</span></label>
+          <input type="number" id="donationamount" name="donationAmount" placeholder="e.g., 50.00">
+      </div>
+      <!-- Date of Donation -->
+      <div class="field-group">
+          <label for="donationdate">Date of Donation<span class="required" aria-hidden="true"></span></label>
+          <input type="date" id="donationdate" name="donationDate" aria-required="true">
+      </div>
+      <!-- Donor Comment/Message (optional) -->
+      <div class="field-group">
+          <label for="donorcomment">Donor Comment/Message</label>
+          <textarea name="donorComment" id="donorcomment" placeholder="Please leave a message with your donation (optional)" maxlength="100">
+          </textarea>
+      </div>
+      <button id="submit" type="submit">Submit Donation</button>
+    </form>
+  </section>
+  <!-- Donation Records Section -->
+  <section id="records-section">
+    <h2>Donation Records</h2>
+    <div id="records" class="records-container"></div>
+  </section>
 
   <footer>
     <p>&copy; 2025 PIXELL River Financial</p>
