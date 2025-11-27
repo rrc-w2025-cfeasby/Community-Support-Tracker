@@ -88,12 +88,17 @@ function showErrors(errors) {
         // Add red border of errors
         field.classList.add("input-error");
 
+        // Prevent duplicated messages
+        let exist = field.parentElement.querySelector(".error-msg");
+        if (exist) exist.remove();
+
         // Create hint information
         const message = document.createElement("div");
         message.className = "error-msg";
         message.textContent = err.message;
 
-        field.parentElement.appendChild(message);
+        // Insert directly after the input
+        field.insertAdjacentElement("afterend", message);
     });
 }
 
@@ -131,13 +136,6 @@ function initApp() {
             saveToLocalStorage(data);
             renderDonationCards();
             form.reset();
-        });
-
-        document.addEventListener("click", e => {
-            if (e.target.classList.contains("delete-btn")) {
-                const index = Number(e.target.dataset.index);
-                deleteRecord(index);
-            }
         });
 
         const toggle = document.getElementById("menu-toggle");
