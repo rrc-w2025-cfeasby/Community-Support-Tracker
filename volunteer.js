@@ -1,7 +1,45 @@
 // Community-Support-Tracker/volunteer.js
 
+const VOLUNTEER_STORAGE_KEY = "volunteerEntries";
 // In-memory temporary data store
 const volunteerEntries = [];
+
+// Load existing entries from localStorage on initialization
+function localEntriesStorage() {
+  const raw = localStorage.getItem(VOLUNTEER_STORAGE_KEY);
+  if (!raw) {
+    // nothing saved yet
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+  } catch (e) {
+    console.error("Error parsing volunteer entries from localStorage:", e);
+  }
+  return [];
+}
+// Sync in-memory entries from localStorage
+function syncEntriesFromStorage() {
+  const storedEntries = localEntriesStorage();
+  volunteerEntries.length = 0;
+  volunteerEntries.push(...storedEntries);
+}
+
+// Save in-memory entries to localStorage
+function saveEntriesToStorage() {
+  localStorage.setItem(VOLUNTEER_STORAGE_KEY, JSON.stringify(volunteerEntries));
+}
+
+function calculateTotalHours() {
+  return volunteerEntries.reduce(
+    (sum, entry) => sum + Number(entry.hoursVolunteered || 0),
+    0
+  );
+}
 
 /**
  * Validate the volunteer form values.
