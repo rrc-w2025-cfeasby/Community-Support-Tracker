@@ -161,6 +161,68 @@ button[type="submit"]:hover {
     gap: 0.5rem;
 }
 
+/* Signup Table Styles */
+#signup-section{
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#signup-section h2{
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #0077CC;
+}
+
+#signup-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background-color: #FFF;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+#signup-table th,
+#signup-table td{
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #CCC;
+    color: #333;
+}
+
+#signup-table th{
+    background-color: #0077CC;
+    color: #FFF;
+    font-weight: bold;
+}
+
+#signup-table tr:nth-child(even){
+    background-color: #F9F9F9;
+}
+
+#signup-table tr:hover{
+    background-color: #E3F2FD; 
+}
+
+.delete-btn{
+    background-color: #D32F2F;
+    color: #FFF;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #B00020;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   header{
