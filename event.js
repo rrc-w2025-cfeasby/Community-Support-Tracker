@@ -8,6 +8,9 @@
  * 
  */
 
+// Global array to hold signups
+const signups = [];
+
 /**
  * Show the Error on the form
  * 
@@ -95,6 +98,55 @@ function validateForm(){
 }
 
 /**
+ * displaySignups - Displays signups in the table
+ * @param {Array} signups - Array of signup objects
+ * Each object should have: { eventName, participantName, email, role }
+ */
+function displaySignups(signups){
+    const tableBody = document.querySelector("#signup-table tbody");
+
+    // Clear previous rows
+    tableBody.innerHTML = "";
+
+    // Render each signup
+    signups.forEach(({ eventName, participantName, email, role }) => {
+        const row = document.createElement("tr");
+
+        const eventCell = document.createElement("td");
+        eventCell.textContent = eventName;
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = participantName;
+
+        const emailCell = document.createElement("td");
+        emailCell.textContent = email;
+
+        const roleCell = document.createElement("td");
+        roleCell.textContent = role;
+
+        const deleteCell = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("delete-btn");
+
+        // Delete button removes the row from the table only
+        deleteButton.addEventListener("click", () => {
+            row.remove();
+        });
+
+        deleteCell.appendChild(deleteButton);
+
+        row.appendChild(eventCell);
+        row.appendChild(nameCell);
+        row.appendChild(emailCell);
+        row.appendChild(roleCell);
+        row.appendChild(deleteCell);
+
+        tableBody.appendChild(row);
+    });
+}
+
+/**
  * Handle the Form Submit
  * 
  * @param {event} event - The event processed
@@ -152,11 +204,30 @@ function handleFormSubmit(event) {
     };
 
     console.log("Form Submitted:", tempData);
+
+    // Add new signup to the array
+    signups.push({
+        eventName,
+        participantName: repName,
+        email: repEmail,
+        role
+    });
+
+    // Refresh table
+    displaySignups(signups);
     
     const p = document.createElement('p');
     p.textContent = 'Form submitted successfully!';
     p.style.color = 'green';
     feedbackDiv.appendChild(p);
+
+    // Clear form
+    event.target.reset();
+
+    // Wait 3 seconds and clear the feedbackDiv
+    setTimeout(() => {
+        feedbackDiv.innerHTML = "";
+    }, 3000);
 }
 
 /**
