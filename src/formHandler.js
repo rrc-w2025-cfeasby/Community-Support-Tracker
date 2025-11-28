@@ -96,10 +96,82 @@ function handleFormSubmit(event) {
 
     console.log("Form Submitted:", tempData);
     
+    // Persist to localStorage in the shape tests expect
+    const signup = {
+        eventName,
+        participantName: repName,
+        email: repEmail,
+        role
+    };
+
+    const stored = JSON.parse(localStorage.getItem("eventSignups")) || [];
+    stored.push(signup);
+    localStorage.setItem("eventSignups", JSON.stringify(stored));
+
     const p = document.createElement('p');
     p.textContent = 'Form submitted successfully!';
     p.style.color = 'green';
     feedbackDiv.appendChild(p);
 }
 
-module.exports = { handleFormSubmit };
+/**
+ * Load signups from localStorage
+ */
+function loadSignups(){
+    return JSON.parse(localStorage.getItem("eventSignups")) || [];
+}
+
+/**
+ * Display signups in the table
+ */
+function displaySignups(signups){
+    const tbody = document.querySelector("#signup-table tbody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+    signups.forEach(signup => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${signup.eventName}</td>
+            <td>${signup.participantName}</td>
+            <td>${signup.email}</td>
+            <td>${signup.role}</td>
+            <td><button class="delete-btn">Delete</button></td>
+        `;
+
+        // Delete button logic
+        row.querySelector(".delete-btn").addEventListener("click", () => {
+            const confirmDelete = window.confirm(`Delete signup for ${signup.participantName}?`);
+            if(!confirmDelete) return;
+
+            const updated = loadSignups().filter(s => !(s.eventName === signup.eventName && s.email === signup.email));
+            localStorage.setItem("eventSignups", JSON.stringify(updated));
+            displaySignups(updated);
+            updateSummary();
+        });
+        tbody.appendChild(row);
+    });
+}
+
+/**
+ * Update summary section grouped by role
+ */
+function updateSummary(){
+    const summaryDiv = document.getElementById("summary-content");
+    if(!summaryDiv) return;
+
+    const signups = loadSignups();
+    const counts = {};
+    signups.forEach(s => {
+        counts[s.role] = (counts[s.role] || 0) + 1;
+    });
+
+    summaryDiv.innerHTML = "";
+    Object.entries(counts).forEach(([role, count]) => {
+        const li = document.createElement("li");
+        li.textContent = `${role}: ${count}`;
+        summaryDiv.appendChild(li);
+    });
+}
+
+module.exports = { handleFormSubmit, loadSignups, displaySignups, updateSummary };
