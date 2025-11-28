@@ -8,9 +8,6 @@
  * 
  */
 
-// Global array to hold signups
-const signups = [];
-
 /**
  * Show the Error on the form
  * 
@@ -129,13 +126,6 @@ function displaySignups(signups){
         deleteButton.textContent = "Delete";
         deleteButton.classList.add("delete-btn");
 
-        // Delete button removes the row from the table only
-        deleteButton.addEventListener("click", () => {
-            row.remove();
-        });
-
-        deleteCell.appendChild(deleteButton);
-
         row.appendChild(eventCell);
         row.appendChild(nameCell);
         row.appendChild(emailCell);
@@ -144,6 +134,32 @@ function displaySignups(signups){
 
         tableBody.appendChild(row);
     });
+}
+
+/**
+ * saveSignup - Saves a signup to localStorage
+ * @param {Object} signup - The signup object
+ * { eventName, participantName, email, role }
+ */
+function saveSignup(signup){
+    if(!signup || !signup.eventName || !signup.participantName || !signup.email || !signup.role) return;
+
+    // Get existing signups from localStorage
+    const storedSignups = JSON.parse(localStorage.getItem("eventSignups")) || [];
+
+    // Add new signup
+    storedSignups.push(signup);
+
+    // Save back to localStorage
+    localStorage.setItem("eventSignups", JSON.stringify(storedSignups));
+}
+
+/**
+ * loadSignups - Load signups from localStorage
+ * @returns {Array} signups
+ */
+function loadSignups(){
+    return JSON.parse(localStorage.getItem("eventSignups")) || [];
 }
 
 /**
@@ -195,6 +211,15 @@ function handleFormSubmit(event) {
         return;
     }
 
+    // Save signup to localStorage
+    const signup = {
+        eventName,
+        participantName: repName,
+        email: repEmail,
+        role
+    };
+    saveSignup(signup);
+
     // Store in temporary object
     const tempData = {
         eventName,
@@ -205,16 +230,8 @@ function handleFormSubmit(event) {
 
     console.log("Form Submitted:", tempData);
 
-    // Add new signup to the array
-    signups.push({
-        eventName,
-        participantName: repName,
-        email: repEmail,
-        role
-    });
-
     // Refresh table
-    displaySignups(signups);
+    displaySignups(loadSignups());
     
     const p = document.createElement('p');
     p.textContent = 'Form submitted successfully!';
@@ -248,4 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('signup-form');
     form.addEventListener('submit', handleFormSubmit);
+
+    // Load persisted signups into table on page load
+    displaySignups(loadSignups());
 });
