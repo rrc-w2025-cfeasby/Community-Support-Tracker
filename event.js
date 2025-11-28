@@ -111,20 +111,25 @@ function displaySignups(signups){
 
         const eventCell = document.createElement("td");
         eventCell.textContent = eventName;
+        eventCell.setAttribute("data-label", "Event Name");
 
         const nameCell = document.createElement("td");
         nameCell.textContent = participantName;
+        nameCell.setAttribute("data-label", "Participant Name");
 
         const emailCell = document.createElement("td");
         emailCell.textContent = email;
+        emailCell.setAttribute("data-label", "Email");
 
         const roleCell = document.createElement("td");
         roleCell.textContent = role;
+        roleCell.setAttribute("data-label", "Role");
 
         const deleteCell = document.createElement("td");
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.classList.add("delete-btn");
+        deleteCell.setAttribute("data-label", "Delete");
 
         row.appendChild(eventCell);
         row.appendChild(nameCell);
@@ -162,6 +167,39 @@ function loadSignups(){
     return JSON.parse(localStorage.getItem("eventSignups")) || [];
 }
 
+/**
+ * updateSummary - Updates the upcoming events summary by role
+ */
+function updateSummary(){
+    const summaryDiv = document.getElementById("summary-content");
+    summaryDiv.innerHTML = "";
+
+    const signups = loadSignups();
+
+    // Count signups by role
+    const roleCounts = {};
+    signups.forEach(({ role }) => {
+        if (!roleCounts[role]) {
+            roleCounts[role] = 0;
+        }
+        roleCounts[role]++;
+    });
+
+    // Render summary
+    if(signups.length === 0){
+        summaryDiv.textContent = "No signups yet.";
+        returns;
+    }
+
+    const list = document.createElement("ul");
+    Object.entries(roleCounts).forEach(([role, count]) => {
+        const li = document.createElement("li");
+        li.textContent = `${role}: ${count}`;
+        list.appendChild(li);
+    });
+
+    summaryDiv.appendChild(list);
+}
 /**
  * Handle the Form Submit
  * 
@@ -232,6 +270,7 @@ function handleFormSubmit(event) {
 
     // Refresh table
     displaySignups(loadSignups());
+    updateSummary();
     
     const p = document.createElement('p');
     p.textContent = 'Form submitted successfully!';
@@ -268,4 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load persisted signups into table on page load
     displaySignups(loadSignups());
+
+    updateSummary();
 });
