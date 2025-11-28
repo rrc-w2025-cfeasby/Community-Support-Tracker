@@ -3,7 +3,7 @@
  */
 
 const { handleFormSubmit } = require('../src/formHandler');
-const { displaySignups, loadSignups, updateSummary } = require('../event');
+const { displaySignups, loadSignups, updateSummary } = require('../src/formHandler');
 
 describe("Event Signup Integration Tests", () => {
   beforeEach(() => {
@@ -143,8 +143,13 @@ describe("Event Signup Unit Tests", () => {
   });
 
   test("summary updates when a record is deleted", () => {
+    document.body.innerHTML = `
+      <table id="signup-table"><tbody></tbody></table>
+      <div id="summary-content"></div>
+    `;
+
     localStorage.setItem(
-      "eventSignup",
+      "eventSignups",
       JSON.stringify([
         { eventName: "Event A", participantName: "Alice", email: "a@example.com", role: "sponsor" },
         { eventName: "Event B", participantName: "Bob", email: "b@example.com", role: "participant" },
