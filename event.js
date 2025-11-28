@@ -131,6 +131,24 @@ function displaySignups(signups){
         deleteButton.classList.add("delete-btn");
         deleteCell.setAttribute("data-label", "Delete");
 
+        // Delete button removes signup from localStorage + refreshes table
+        deleteButton.addEventListener("click", () => {
+            // Confirmation prompt
+            const confirmDelete = window.confirm(
+                `Are you sure you want to delete the signup for ${participantName}?`
+            );
+            
+            // Cancel is user clicks Cancel
+            if(!confirmDelete) return;
+
+            let storedSignups = loadSignups();
+            storedSignups = storedSignups.filter(s => !(s.eventName === eventName && s.email === email));
+            localStorage.setItem("eventSignups", JSON.stringify(storedSignups));
+            displaySignups(storedSignups);
+            updateSummary();
+        });
+        deleteCell.appendChild(deleteButton);
+
         row.appendChild(eventCell);
         row.appendChild(nameCell);
         row.appendChild(emailCell);
