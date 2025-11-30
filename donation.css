@@ -28,10 +28,12 @@ nav ul {
     list-style: none;
     background-color: #0077CC;
     padding: 0.5rem 0;
+    gap: 120px;
 }
 
 nav li {
    margin: 0.5rem;
+   font-size: 10px;
 }
 
 nav a {
@@ -39,6 +41,8 @@ nav a {
     text-decoration: none;
     padding: 0.5rem 1rem;
     font-weight: bold;
+    font-size: 1.4rem;
+
 }
 
 nav a.active{
@@ -52,12 +56,8 @@ nav.open ul {
    flex-direction: column;
 }
 
-/* Sections */
-#event-signup {
-    background-color: #8BC34A;
-    padding: 1rem;
-}
 
+/* Sections */
 #section0 {
     display: flex;
     flex-direction: column;
@@ -127,24 +127,9 @@ nav.open ul {
     display: none;
 }
 
-/* Event Signup Section */
-#event-signup {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #F5F5F5;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#event-signup h2{
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #0077CC;
-}
-
 /* Form Layout */
 form {
+    width: 50;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -208,7 +193,7 @@ button[type="submit"]:hover {
     text-align: center;
 }
 #donation-table {
-    width: 100%;
+    width: 50%;
     margin-top: 20px;
     border-collapse: collapse;
     background-color: #fff;

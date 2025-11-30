@@ -32,6 +32,28 @@ function getFormData() {
     };
 }
 
+// Render of donation table
+function renderDonationTable(){
+    const records = JSON.parse(localStorage.getItem("donationRecords")) || [];
+    const tableBody = document.querySelector("#donation-table tbody");
+    if (!tableBody) return;
+
+    tableBody.innerHTML = "";
+
+    records.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+        <td>${item.charityName}</td>
+        <td>$${Number(item.donationAmount).toFixed(2)}</td>
+        <td>${item.DonationDate}</td>
+        <td>${item.donorComment}</td>
+        <td><button class="delete-btn" data-index="${index}">Delete</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
 // Save to local storage
 function saveToLocalStorage(data) {
     let records = JSON.parse(localStorage.getItem("donationRecords")) || [];
@@ -76,6 +98,7 @@ function deleteRecord(index) {
     records.splice(index, 1);
     localStorage.setItem("donationRecords", JSON.stringify(records));
     renderDonationCards();
+    renderDonationTable();
 }
 
 
@@ -113,6 +136,7 @@ function scrollToFirstError() {
 // The connection to Webpage executed after DOM
 function initApp() {
     renderDonationCards();
+    renderDonationTable();
 
     const form = document.querySelector("form");
     if (form) {
@@ -130,6 +154,7 @@ function initApp() {
 
             saveToLocalStorage(data);
             renderDonationCards();
+            renderDonationTable();
             form.reset();
         });
 
@@ -164,4 +189,3 @@ if (typeof module !== "undefined" && module.exports) {
     getFormData
   };
 }
-
