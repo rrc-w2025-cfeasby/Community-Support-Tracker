@@ -41,20 +41,48 @@
           <label for="donationdate">Date of Donation<span class="required" aria-hidden="true"></span></label>
           <input type="date" id="donationdate" name="donationDate" aria-required="true">
       </div>
+
       <!-- Donor Comment/Message (optional) -->
       <div class="field-group">
           <label for="donorcomment">Donor Comment/Message</label>
           <textarea name="donorComment" id="donorcomment" placeholder="Please leave a message with your donation (optional)" maxlength="100">
           </textarea>
       </div>
+
       <button id="submit" type="submit">Submit Donation</button>
     </form>
+
+    <!-- Table to Record Each Donation -->
+    <h3 class="table-title">Table of Submitted Donations</h3>
+    <table id="donation-table">
+      <thead>
+        <tr>
+          <th>Charity Name</th>
+          <th>Donation Amount</th>
+          <th>Date</th>
+          <th>Donor Comment</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- Insert Data -->
+        <tr>
+          <td>Alice Smith</td>
+          <td>$50.00</td>
+          <td>2025-11-13</td>
+          <td>Keep up the great work!</td>
+          <td><button class="delete-btn">Delete</td>
+        </tr>
+      </tbody>
+    </table>
   </section>
-  <!-- Donation Records Section -->
-  <section id="records-section">
-    <h2>Donation Records</h2>
-    <div id="records" class="records-container"></div>
-  </section>
+
+    <!-- Donation Records Section -->
+    <section id="records-section">
+      <h2>Donation Records</h2>
+      <div id="records" class="records-container"></div>
+    </section>
 
   <footer>
     <p>&copy; 2025 PIXELL River Financial</p>
