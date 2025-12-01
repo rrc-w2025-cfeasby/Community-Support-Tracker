@@ -176,14 +176,14 @@ function initApp() {
         }
     }
 
-// // Export for Jest
-// if (typeof module !== 'undefined' && module.exports) {
-//   module.exports = {
-//     loadRecords,
-//     saveRecord,
-//     deleteRecord,
-//     validateForm,
-//     getFormData,
-//   };
-// }
+// Export for Jest
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    loadRecords,
+    saveRecord,
+    deleteRecord,
+    validateForm,
+    getFormData,
+  };
+}
 initApp();
