@@ -3,26 +3,28 @@
  * Donation Details
  * Nov 20th, 2025   Kang Ye
  */
-
-// Validation of form
-function validateForm(data) {
-    const {charityName, donationAmount, donationDate} = data;
-
-    let errors = [];
-
-    if (!charityName) errors.push({field: "charityname", message: "Charity Name is required."});
-
-    if (!donationAmount || !isFinite(donationAmount) || Number(donationAmount) <= 0)
-        errors.push({field: "donationamount", message: "Donation Amount must be a valid number greater than 0."});
-
-    if (!donationDate)
-        errors.push({field: "donationdate", message: "Date of Donation is required"});
-
-    return errors;
+console.log('[donation.js] file loaded');
+window.addEventListener('error', e => console.error('Global error:', e.message, e.filename, e.lineno));
+// Load all records
+function loadRecords() {
+    return JSON.parse(localStorage.getItem("donationRecords")) || [];
 }
 
+// Save a single record
+function saveRecord(record) {
+    const records = loadRecords();
+    records.push(record);
+    localStorage.setItem("donationRecords", JSON.stringify(records));
+}
 
-// Collect form data
+// Delete record by index
+function deleteRecord(index) {
+    const records = loadRecords();
+    records.splice(index, 1);
+    localStorage.setItem("donationRecords", JSON.stringify(records));
+}
+
+// Get form values
 function getFormData() {
     return {
         charityName: document.getElementById("charityname").value.trim(),
@@ -32,13 +34,26 @@ function getFormData() {
     };
 }
 
-// Render of donation table
-function renderDonationTable(){
-    const records = JSON.parse(localStorage.getItem("donationRecords")) || [];
-    const tableBody = document.querySelector("#donation-table tbody");
-    if (!tableBody) return;
+// Validate
+function validateForm(data) {
+    const errors = [];
 
-    tableBody.innerHTML = "";
+    if (!data.charityName) errors.push({field: "charityname", message: "Charity Name is required."});
+    if (!data.donationAmount || data.donationAmount <= 0)
+        errors.push({field:"donationamount", message:"Donation amount must be positive."});
+    if (!data.donationDate)
+        errors.push({field: "donationdate", message:"Date is required."});
+
+    return errors;
+}
+
+// Render table
+function renderDonationTable(){
+    const records = loadRecords();
+    const tbody = document.querySelector("#donation-table tbody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
 
     records.forEach((item, index) => {
         const row = document.createElement("tr");
@@ -46,85 +61,66 @@ function renderDonationTable(){
         row.innerHTML = `
         <td>${item.charityName}</td>
         <td>$${Number(item.donationAmount).toFixed(2)}</td>
-        <td>${item.DonationDate}</td>
+        <td>${item.donationDate}</td>
         <td>${item.donorComment}</td>
-        <td><button class="delete-btn" data-index="${index}">Delete</td>
+        <td><button class="delete-btn" data-index="${index}">Delete</button></td>
         `;
 
-        tableBody.appendChild(row);
+        tbody.appendChild(row);
     });
 }
-// Save to local storage
-function saveToLocalStorage(data) {
-    let records = JSON.parse(localStorage.getItem("donationRecords")) || [];
-    records.push(data);
-    localStorage.setItem("donationRecords", JSON.stringify(records));
-}
 
-// Show donation records on webpage
+// Render Card View
 function renderDonationCards() {
-    let records = JSON.parse(localStorage.getItem("donationRecords")) || [];
-
+    const records = loadRecords();
     const container = document.getElementById("records");
-    if (!container) return;
+    container.innerHTML= "";
 
-    container.innerHTML = "";
-
-    // No records
     if (records.length === 0) {
         container.innerHTML = "<p> No donation records yet. </p>";
         return;
     }
 
-    records.forEach((item, index) => {
+    records.forEach((item, index)=> {
         const card = document.createElement("div");
         card.className = "donation-card";
 
         card.innerHTML = `
-        <h3> ${item.charityName}</h3>
-        <div class="card-field"><span class="card-label">Amount:</span> ${item.donationAmount}</div>
-        <div class="card-field"><span class="card-label">Date:</span> ${item.donationDate}</div>
-        <div class="card-field"><span class="card-label">Comment:</span> ${item.donorComment}</div>
-        <button class="delete-btn" onclick="deleteRecord(${index})">Delete</button>
+        <h3>${item.charityName}</h3>
+        <p><strong>Amount:</strong> $${item.donationAmount.toFixed(2)}</p>
+        <p><strong>Date:</strong>${item.donationDate}</p>
+        <p><strong>Comment:</strong>${item.donorComment}</p>
+        <button class="delete-btn" data-index="${index}">Delete</button>
         `;
 
         container.appendChild(card);
+
     });
-}
+ }
 
-// Delete records
-function deleteRecord(index) {
-    let records = JSON.parse(localStorage.getItem("donationRecords")) || [];
-    records.splice(index, 1);
-    localStorage.setItem("donationRecords", JSON.stringify(records));
-    renderDonationCards();
-    renderDonationTable();
-}
-
-
-// Show errors besides the input
-function showErrors(errors) {
-    errors.forEach(err => {
-        const field =document.getElementById(err.field);
-        if (!field) return;
-
-        // Add red border of errors
-        field.classList.add("input-error");
-
-        // Create hint information
-        const message = document.createElement("div");
-        message.className = "error-msg";
-        message.textContent = err.message;
-
-        field.parentElement.appendChild(message);
-    });
-}
-
+// Error Handling
 // Clear errors
 function clearErrors() {
         document.querySelectorAll(".error-msg").forEach(e =>e.remove());
         document.querySelectorAll(".input-error").forEach(e =>e.classList.remove("input-error"));
     }
+
+// Show errors besides the input
+function showErrors(errors) {
+    errors.forEach(err => {
+        const field =document.getElementById(err.field)
+
+        // Add red border of errors
+        field.classList.add("input-error");
+
+        // Create hint information
+        const msg = document.createElement("div");
+        msg.className = "error-msg";
+        msg.textContent = err.message;
+
+        field.parentElement.appendChild(msg);
+    });
+}
 
 function scrollToFirstError() {
         const firstError = document.querySelector(".input-error");
@@ -135,36 +131,43 @@ function scrollToFirstError() {
 
 // The connection to Webpage executed after DOM
 function initApp() {
-    renderDonationCards();
     renderDonationTable();
+    renderDonationCards();
+    console.log('[initApp] running')
 
-    const form = document.querySelector("form");
-    if (form) {
-        form.addEventListener('submit', e => {
+
+    const form = document.getElementById("donation_main");
+    form.addEventListener('submit', e => {
             e.preventDefault();
             clearErrors();
 
             const data = getFormData();
             const errors = validateForm(data);
-            if (errors.length) {
+
+            if (errors.length > 0) {
                 showErrors(errors);
                 scrollToFirstError();
                 return;
             }
 
-            saveToLocalStorage(data);
-            renderDonationCards();
+            saveRecord(data);
             renderDonationTable();
+            renderDonationCards();
             form.reset();
+
         });
 
-        document.addEventListener("click", e => {
-            if (e.target.classList.contains("delete-btn")) {
-                const index = Number(e.target.dataset.index);
-                deleteRecord(index);
-            }
-        });
+    // Event delegation for delete buttons (table + cards)
+    document.addEventListener("click", e => {
+        if (e.target.classList.contains("delete-btn")) {
+            const index = Number(e.target.dataset.index);
+            deleteRecord(index);
+            renderDonationTable();
+            renderDonationCards();
+        }
+    });
 
+        // Menu toggle
         const toggle = document.getElementById("menu-toggle");
         const nav = document.getElementById("navbar");
         if (toggle && nav) {
@@ -172,20 +175,15 @@ function initApp() {
             nav.classList.toggle("open"));
         }
     }
-}
 
-if (typeof window !=="undefined" && window.document) {
-    document.addEventListener("DOMContentLoaded", initApp)
-    }
-
-
-// Export for test
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    validateForm,
-    saveToLocalStorage,
-    renderDonationCards,
-    deleteRecord,
-    getFormData
-  };
-}
+// // Export for Jest
+// if (typeof module !== 'undefined' && module.exports) {
+//   module.exports = {
+//     loadRecords,
+//     saveRecord,
+//     deleteRecord,
+//     validateForm,
+//     getFormData,
+//   };
+// }
+initApp();
