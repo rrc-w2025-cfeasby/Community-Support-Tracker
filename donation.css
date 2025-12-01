@@ -28,10 +28,12 @@ nav ul {
     list-style: none;
     background-color: #0077CC;
     padding: 0.5rem 0;
+    gap: 120px;
 }
 
 nav li {
    margin: 0.5rem;
+   font-size: 10px;
 }
 
 nav a {
@@ -39,6 +41,8 @@ nav a {
     text-decoration: none;
     padding: 0.5rem 1rem;
     font-weight: bold;
+    font-size: 1.4rem;
+
 }
 
 nav a.active{
@@ -52,47 +56,80 @@ nav.open ul {
    flex-direction: column;
 }
 
+
 /* Sections */
-#event-signup {
-    background-color: #8BC34A;
+#section0 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 1rem;
 }
 
-
-#section3 {
-    background-color: #F48FB1;
-    padding: 1rem;
+#section1 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
 }
 
-footer {
-    background-color: #CCC;
-    padding: 1rem;
+#donation_main {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#donorcomment {
+    height: 120px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+#records-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 600px;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+#records-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #FFFFFF;
+    background-color: #0077CC;
+    padding: 12px 16px;
+    width: 100%;
+    border-radius: 8px;
+    box-sizing: border-box;
     text-align: center;
+}
+
+#records {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 #menu-toggle {
     display: none;
 }
 
-/* Event Signup Section */
-#donation_main {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #F5F5F5;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-
-#donation_main h2{
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #0077CC;
-}
-
 /* Form Layout */
 form {
+    width: 50;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -100,6 +137,7 @@ form {
 
 label {
     font-weight: bold;
+    font-size: 1.2rem;
     margin-bottom: 0.25rem;
     color: #333;
 }
@@ -118,6 +156,16 @@ select:focus {
     box-shadow: 0 0 4px rgba(0, 119, 204, 0.4);
 }
 
+.input-error {
+    border: 2px solid red !important;
+}
+
+.error-msg {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 3px;
+}
+
 /* Submit Button */
 button[type="submit"] {
     background-color: #0077CC;
@@ -125,6 +173,7 @@ button[type="submit"] {
     border: none;
     padding: 0.75rem;
     font-weight: bold;
+    font-size: 20px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -134,30 +183,132 @@ button[type="submit"]:hover {
     background-color: #005FA3;
 }
 
-/* Feedback Area */
-#form-feedback {
-    margin-top: 1rem;
+/* Table of Donation Records */
+.table-title {
+    font-size: 1.4rem;
     font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #0077cc;
     text-align: center;
 }
+#donation-table {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0,05);
+    border-radius: 8px;
+    overflow: hidden;
+}
 
-#form-feedback p {
-    margin-top: 1rem;
+#donation-table th,
+#donation-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+#donation-table th {
+        background-color: #0077cc;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f3f4f6;
+}
+
+.delete-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #dc2626;
+}
+
+/* Container for all donation cards */
+.records-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Individual donation card */
+.donation-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.donation-card:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* Card content layout */
+.donation-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.donation-card .amount {
+    font-size: 1.2rem;
     font-weight: bold;
+    color: #10b981;
+}
+
+.donation-card .date {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.donation-card .comment {
+    font-size: 0.95rem;
+    color: #374151;
+    margin-bottom: 12px;
+    background-color: #f3f4f6;
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+/* Delete button */
+.donation-card .delete-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.donation-card .delete-btn:hover {
+    background-color: #dc2626;
+}
+
+.error {
     color: red;
-}
-
-.error-msg {
-  color: #d32f2f;   /* accessible dark red */
-  font-size: 1rem;  /* 16px */
-  font-weight: bold;
-  margin-top: 0.25rem;
-}
-
-
-.input-error {
-  border: 2px solid red;   /* red border around invalid input */
-  background-color: #ffe6e6; /* light red background for visibility */
+    font-size: 0.9rem;
+    margin-top: 0.1rem;
 }
 
 .field-group {
@@ -167,50 +318,113 @@ button[type="submit"]:hover {
     gap: 0.5rem;
 }
 
+footer {
+    background-color: #CCC;
+    padding: 1rem;
+    text-align: center;
+}
+
 /* Mobile styles */
-@media (max-width: 768px) {
-  header{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      text-align: left;
+
+
+  @media (max-width: 768px) {
+  /* Header layout */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    text-align: left;
+    flex-wrap: wrap;
   }
 
-  header h1{
-      font-size: 1.2rem;
-      margin: 0;
+  header h1 {
+    font-size: 1.2rem;
+    margin: 0;
+    flex: 1 1 auto;
   }
 
-  .header-content{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+  #menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #333;
+    cursor: pointer;
+    margin-left: auto;
+    z-index: 1000;
   }
 
+  /* Navigation menu */
   nav ul {
-      display: none;
-      flex-direction: column;
-      background-color: #0077CC;
-      padding: 1rem 0;
+    display: none;
+    flex-direction: column;
+    background-color: #0077CC;
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
   }
 
   nav.open ul {
-     display: flex;
+    display: flex;
   }
 
   nav li {
     margin: 0.5rem 0;
   }
 
-  #menu-toggle {
-      display: block;
-      position: absolute;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      top: 1rem;
-      right: 1rem;
-      z-index: 1000;
+  nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
   }
+
+  /* Section layout */
+    #section1,
+    #section0,
+    #event-signup,
+    #donation_main,
+    #records-section {
+        padding: 1rem;
+        width: 100%;
+        max-width: 100%;
+  }
+
+    /* Form fields */
+    form {
+            gap: 0.75rem;
+    }
+
+    input,select,textarea {
+            font-size: 1rem;
+            padding: 0.5rem;
+    }
+
+    button[type="submit"] {
+            font-size: 1rem;
+            padding: 0.75rem;
+    }
+
+    /* Donation cards layout */
+    .records-container {
+            grid-template-columns: 1fr;
+            gap: 16px;
+    }
+
+    .donation-card {
+            padding: 1rem;
+    }
+
+    .donation-card .amount {
+        font-size: 1rem;
+    }
+
+    .donation-card .comment {
+        font-size: 0.9rem;
+    }
+
+    .donation-card .delete-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
 }
