@@ -193,7 +193,8 @@ button[type="submit"]:hover {
     text-align: center;
 }
 #donation-table {
-    width: 50%;
+    width: 100%;
+    max-width: 800px;
     margin-top: 20px;
     border-collapse: collapse;
     background-color: #fff;
