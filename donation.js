@@ -3,8 +3,7 @@
  * Donation Details
  * Nov 20th, 2025   Kang Ye
  */
-console.log('[donation.js] file loaded');
-window.addEventListener('error', e => console.error('Global error:', e.message, e.filename, e.lineno));
+
 // Load all records
 function loadRecords() {
     return JSON.parse(localStorage.getItem("donationRecords")) || [];
@@ -47,6 +46,16 @@ function validateForm(data) {
     return errors;
 }
 
+// Calculate Total Amount
+function calcTotal() {
+    return loadRecords().reduce((sum, r) => sum + Number(r.donationAmount), 0)
+}
+
+// Render Summary
+function renderSummary() {
+    document.getElementById('total-amount').textContent= `$` + calcTotal().toFixed(2);
+}
+
 // Render table
 function renderDonationTable(){
     const records = loadRecords();
@@ -68,7 +77,9 @@ function renderDonationTable(){
 
         tbody.appendChild(row);
     });
+    renderSummary(); // Refresh the summary of donation amount
 }
+
 
 // Render Card View
 function renderDonationCards() {
@@ -96,6 +107,7 @@ function renderDonationCards() {
         container.appendChild(card);
 
     });
+    renderSummary();
  }
 
 // Error Handling
@@ -153,17 +165,18 @@ function initApp() {
             saveRecord(data);
             renderDonationTable();
             renderDonationCards();
+            renderSummary();
             form.reset();
-
         });
 
     // Event delegation for delete buttons (table + cards)
     document.addEventListener("click", e => {
         if (e.target.classList.contains("delete-btn")) {
             const index = Number(e.target.dataset.index);
-            deleteRecord(index);
-            renderDonationTable();
-            renderDonationCards();
+            deleteRecord(index);    // Delete LocalStorage
+            renderDonationTable();  // Render table
+            renderDonationCards();  // Render cards
+            renderSummary();        // Render summary
         }
     });
 
