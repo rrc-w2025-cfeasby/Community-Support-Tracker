@@ -53,11 +53,15 @@ function calcTotal() {
 
 // Render Summary
 function renderSummary() {
-    document.getElementById('total-amount').textContent= `$` + calcTotal().toFixed(2);
+    if (typeof document === "undefined") return;
+    const box = document.getElementById('total-amount');
+    if (box) box.textContent= `$` + calcTotal().toFixed(2);
 }
 
 // Render table
 function renderDonationTable(){
+    if (typeof document === "undefined") return;
+
     const records = loadRecords();
     const tbody = document.querySelector("#donation-table tbody");
     if (!tbody) return;
@@ -83,9 +87,13 @@ function renderDonationTable(){
 
 // Render Card View
 function renderDonationCards() {
+    if (typeof document === "undefined") return;
+
     const records = loadRecords();
     const container = document.getElementById("records");
-    container.innerHTML= "";
+    if (!container) return;
+
+    container.innerHTML = "";
 
     if (records.length === 0) {
         container.innerHTML = "<p> No donation records yet. </p>";
@@ -98,7 +106,7 @@ function renderDonationCards() {
 
         card.innerHTML = `
         <h3>${item.charityName}</h3>
-        <p><strong>Amount:</strong> $${item.donationAmount.toFixed(2)}</p>
+        <p><strong>Amount:</strong> $${Number(item.donationAmount).toFixed(2)}</p>
         <p><strong>Date:</strong>${item.donationDate}</p>
         <p><strong>Comment:</strong>${item.donorComment}</p>
         <button class="delete-btn" data-index="${index}">Delete</button>
@@ -113,14 +121,19 @@ function renderDonationCards() {
 // Error Handling
 // Clear errors
 function clearErrors() {
+    if (typeof document === "undefined") return;
+
         document.querySelectorAll(".error-msg").forEach(e =>e.remove());
         document.querySelectorAll(".input-error").forEach(e =>e.classList.remove("input-error"));
     }
 
 // Show errors besides the input
 function showErrors(errors) {
+    if (typeof document === "undefined") return;
+
     errors.forEach(err => {
         const field =document.getElementById(err.field)
+        if(!field) return;
 
         // Add red border of errors
         field.classList.add("input-error");
@@ -135,6 +148,8 @@ function showErrors(errors) {
 }
 
 function scrollToFirstError() {
+    if (typeof document === "undefined") return;
+
         const firstError = document.querySelector(".input-error");
         if (firstError) {
             firstError.scrollIntoView({behavior: "smooth", block: "center"});
@@ -143,13 +158,17 @@ function scrollToFirstError() {
 
 // The connection to Webpage executed after DOM
 function initApp() {
-    renderDonationTable();
-    renderDonationCards();
-    console.log('[initApp] running')
+    if (typeof document === "undefined") return;
 
+    renderDonationTable?.();
+    renderDonationCards?.();
 
     const form = document.getElementById("donation_main");
-    form.addEventListener('submit', e => {
+    if (!form)  return;
+
+
+    if(!form.dataset.bound) {
+        form.addEventListener('submit', e => {
             e.preventDefault();
             clearErrors();
 
@@ -163,11 +182,14 @@ function initApp() {
             }
 
             saveRecord(data);
-            renderDonationTable();
-            renderDonationCards();
-            renderSummary();
+            renderDonationTable?.();
+            renderDonationCards?.();
+            renderSummary?.();
             form.reset();
         });
+
+        form.dataset.bound = "true";
+    }
 
     // Event delegation for delete buttons (table + cards)
     document.addEventListener("click", e => {
@@ -185,18 +207,20 @@ function initApp() {
         const nav = document.getElementById("navbar");
         if (toggle && nav) {
             toggle.addEventListener("click", () =>
-            nav.classList.toggle("open"));
+                nav.classList.toggle("open"));
         }
     }
 
 // Export for Jest
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    loadRecords,
-    saveRecord,
-    deleteRecord,
-    validateForm,
-    getFormData,
-  };
+    module.exports = {
+        loadRecords,
+        saveRecord,
+        deleteRecord,
+        validateForm,
+        getFormData,
+        renderDonationTable,
+        initApp
+    };
 }
 initApp();
