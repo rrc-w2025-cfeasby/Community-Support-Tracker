@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "community-support-tracker",
   "version": "1.0.0",
   "description": "Front End Group Project",
@@ -21,13 +20,6 @@
   "homepage": "https://github.com/rrc-w2025-cfeasby/Community-Support-Tracker#readme",
   "devDependencies": {
     "jest": "^29.7.0",
-=======
-  "scripts": {
-    "test": "jest"
-  },
-  "devDependencies": {
-    "jest": "^30.2.0",
->>>>>>> main
     "jest-environment-jsdom": "^30.2.0"
   }
 }
