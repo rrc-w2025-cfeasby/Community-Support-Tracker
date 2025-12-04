@@ -1,9 +1,14 @@
 /**
  * @jest-environment jsdom
  */
+/**
+ * @jest-environment jsdom
+ */
 const {
   validateVolunteerData,
   buildVolunteerEntry,
+  handleVolunteerSubmit,
+  volunteerEntries,
 } = require("./volunteer.js");
 
 // Build DOM that matches volunteer.html
@@ -54,34 +59,25 @@ function setupDOM() {
 beforeEach(() => {
   setupDOM();
   volunteerEntries.length = 0; // clear temp data
-  // We don't rely on the event listener in tests; we call handleVolunteerSubmit directly.
 });
 
 // INTEGRATION TESTS
-// Simulate full form submission flow
 describe("volunteer form submission", () => {
   test("submitting valid form updates the temporary data object correctly", () => {
     const form = document.getElementById("volunteer-form");
 
-    const charityInput = document.getElementById("charityName");
-    const dateInput = document.getElementById("date");
-    const hoursInput = document.getElementById("hours");
-    const star4 = document.getElementById("star4");
+    document.getElementById("charityName").value = "Red Cross";
+    document.getElementById("date").value = "2025-11-01";
+    document.getElementById("hours").value = "3.5";
+    document.getElementById("star4").checked = true;
 
-    charityInput.value = "Red Cross";
-    dateInput.value = "2025-11-01";
-    hoursInput.value = "3.5";
-    star4.checked = true;
-
-    // Fake submit event with form as target
     const event = new Event("submit", { bubbles: true, cancelable: true });
+    event.preventDefault = jest.fn(); // stub preventDefault
     Object.defineProperty(event, "target", { value: form });
 
     handleVolunteerSubmit(event);
 
-    // Now the handler definitely ran; check that temp data has one entry
     expect(volunteerEntries.length).toBe(1);
-
     const entry = volunteerEntries[0];
 
     expect(entry).toEqual(
@@ -95,8 +91,6 @@ describe("volunteer form submission", () => {
     expect(typeof entry.id).toBe("number");
   });
 
-
-// test 
   test("submitting invalid or incomplete data shows validation errors in the DOM", () => {
     const form = document.getElementById("volunteer-form");
 
@@ -105,24 +99,20 @@ describe("volunteer form submission", () => {
     const hoursError = document.getElementById("hours_error");
     const ratingError = document.getElementById("rating_error");
 
-    // Leave all fields empty
     const event = new Event("submit", { bubbles: true, cancelable: true });
+    event.preventDefault = jest.fn();
     Object.defineProperty(event, "target", { value: form });
 
     handleVolunteerSubmit(event);
 
-    // No entries should be added
     expect(volunteerEntries.length).toBe(0);
 
-    // At least one error message should be visible
     const errorsVisible =
       !charityError.hidden || !dateError.hidden || !hoursError.hidden || !ratingError.hidden;
 
     expect(errorsVisible).toBe(true);
   });
 });
-
-
 
 // UNIT TESTS
 describe("validateVolunteerData", () => {
@@ -131,7 +121,7 @@ describe("validateVolunteerData", () => {
       charityName: "",
       date: "",
       hours: "",
-      rating: "",.
+      rating: "",
     });
 
     expect(errors).toEqual(
@@ -234,7 +224,6 @@ describe("buildVolunteerEntry", () => {
     expect(typeof entry.id).toBe("number");
   });
 });
-
 
 
 
