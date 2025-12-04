@@ -7,11 +7,8 @@ const volunteerEntries = [];
 // Load existing entries from localStorage on initialization
 function localEntriesStorage() {
   const raw = localStorage.getItem(VOLUNTEER_STORAGE_KEY);
-  if (!raw) {
-    // nothing saved yet
-    return [];
-  }
-
+  if (!raw) return [];
+  
   try {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
@@ -22,6 +19,7 @@ function localEntriesStorage() {
   }
   return [];
 }
+
 // Sync in-memory entries from localStorage
 function syncEntriesFromStorage() {
   const storedEntries = localEntriesStorage();
@@ -34,12 +32,52 @@ function saveEntriesToStorage() {
   localStorage.setItem(VOLUNTEER_STORAGE_KEY, JSON.stringify(volunteerEntries));
 }
 
+// Update summary section with total hours
+function renderTable() {
+  const tbody = document.querySelector("#volunteerTable tbody");
+  tbody.innerHTML = "";
+
+  volunteerEntries.forEach((entry, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${entry.charityName}</td>
+      <td>${entry.hours}</td>
+      <td>${entry.date}</td>
+      <td>${entry.rating}</td>
+      <td><button data-index="${index}" class="deleteBtn">Delete</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  updateSummary();
+}
+
+function updateSummary() {
+  const total = volunteerEntries.reduce((sum, e) => sum + e.hours, 0);
+  document.getElementById("summary").textContent = `Total Volunteer Hours: ${total}`;
+}
+
+// Calculate total hours volunteered
 function calculateTotalHours() {
   return volunteerEntries.reduce(
     (sum, entry) => sum + Number(entry.hoursVolunteered || 0),
     0
   );
 }
+// Delete a volunteer entry by index
+ function deleteLog(index) {
+  volunteerEntries.splice(index, 1);
+  saveEntriesToStorage();
+  renderTable();
+}
+
+document.querySelector("#volunteerTable").addEventListener("click", (e) => {
+  if (e.target.classList.contains("deleteBtn")) {
+    deleteLog(Number(e.target.dataset.index));
+  }
+});
+
+
 
 /**
  * Validate the volunteer form values.
@@ -192,10 +230,16 @@ function initVolunteerForm(formId = "volunteer-form") {
 // Export for Jest (CommonJS) but keep browser compatibility.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
+
     volunteerEntries,
+    calculateTotalHours,
+    deleteLog,
     validateVolunteerData,
     buildVolunteerEntry,
     handleVolunteerSubmit,
     initVolunteerForm,
+    syncEntriesFromStorage,
+    saveEntriesToStorage,
+    renderTable,
   };
 }
