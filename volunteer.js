@@ -248,14 +248,18 @@ function initVolunteerTracker() {
 document.addEventListener("DOMContentLoaded", initVolunteerTracker)
 
 // Export for Jest (CommonJS) but keep browser compatibility.
-module.exports = {
-  validateVolunteerData,
-  buildVolunteerEntry,
-  handleVolunteerSubmit,
-  volunteerEntries,
-  saveEntriesToStorage,
-  syncEntriesFromStorage,
-  renderTable,
-  calculateTotalHours,
-  deleteLog,
-};
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    validateVolunteerData,
+    buildVolunteerEntry,
+    handleVolunteerSubmit,
+    volunteerEntries,
+    syncEntriesFromStorage,
+    renderTable,
+    saveEntriesToStorage,
+    calculateTotalHours,
+    deleteLog,
+  };
+}
+
+
