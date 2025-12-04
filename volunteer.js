@@ -156,11 +156,9 @@ function handleVolunteerSubmit(event) {
 
 // Sync in-memory entries from localStorage
 function syncEntriesFromStorage() {
-  const stored = localStorage.getItem("volunteerEntries");
+  const storedEntries = localEntriesStorage();
   volunteerEntries.length = 0;
-  if (stored) {
-    JSON.parse(stored).forEach(e => volunteerEntries.push(e));
-  }
+  volunteerEntries.push(...storedEntries);
 }
 
 // Save in-memory entries to localStorage
