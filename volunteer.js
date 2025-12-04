@@ -109,10 +109,10 @@ function handleVolunteerSubmit(event) {
   });
 
   const rawData = {
-   charityName: form.charityName.value.trim(),
-   date: form.date.value,
-   hours:form.hours.value,
-   rating: ratingValue, 
+    charityName: document.getElementById("charityName").value.trim(),
+    date: document.getElementById("date").value,
+    hours: document.getElementById("hours").value,
+    rating: ratingValue,
   };
 
  const errors = validateVolunteerData(rawData);
@@ -254,5 +254,6 @@ if (typeof module !== "undefined" && module.exports) {
     initVolunteerForm,
     saveEntriesToStorage,
     renderTable,
+    volunteerEntries,
   };
 }
