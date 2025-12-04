@@ -1,43 +1,49 @@
 // Community-Support-Tracker/volunteer.js
 
-const VOLUNTEER_STORAGE_KEY = "volunteerEntries";
+const STORAGE_KEY = "volunteerEntries";
 // In-memory temporary data store
 const volunteerEntries = [];
 
 
 // LocalStorage helpers
- function localEntriesStorage(_charityName, _date, _hours, _rating) {
-  const raw = localStorage.getItem(VOLUNTEER_STORAGE_KEY);
+ function localEntriesStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     return[];
   }
 
   try {
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return parsed;
-    }
-  } catch (e) {
-    console.error("Error parsing volunteer entries from localStorage:", e);
+  return Array.isArray(parsed) ? parsed : [];
+  } catch  {
+    return [];
   }
-  return [];
-}
-
-// Sync in-memory entries from localStorage
-function syncEntriesFromStorage() {
-  const storedEntries = localEntriesStorage();
-  volunteerEntries.length = 0;
-  volunteerEntries.push(...storedEntries);
 }
 
 // Save in-memory entries to localStorage
 function saveEntriesToStorage() {
-  localStorage.setItem(VOLUNTEER_STORAGE_KEY, JSON.stringify(volunteerEntries));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(volunteerEntries));
+}
+
+// Calculate total hours volunteered
+function calculateTotalHours() {
+  return volunteerEntries.reduce(
+    (sum, entry) => sum + Number(entry.hoursVolunteered || 0), 0);
+}
+
+// Update Summary
+function updateSummary() {
+  const total = calculateTotalHours();
+  const summaryDiv = document.getElementById("summary");
+  if (summaryDiv) {
+    summaryDiv.textContent = `Total Volunteer Hours: ${total}`;
+  }
 }
 
 // Update summary section with total hours
 function renderTable() {
   const tbody = document.querySelector("#volunteerTable tbody");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   volunteerEntries.forEach((entry, index) => {
@@ -55,24 +61,68 @@ function renderTable() {
   updateSummary();
 }
 
-function updateSummary() {
-  const total = volunteerEntries.reduce((sum, e) => sum + e.hours, 0);
-  document.getElementById("summary").textContent = `Total Volunteer Hours: ${total}`;
-}
 
-// Calculate total hours volunteered
-function calculateTotalHours() {
-  return volunteerEntries.reduce(
-    (sum, entry) => sum + Number(entry.hoursVolunteered || 0),
-    0
-  );
-}
 // Delete a volunteer entry by index
  function deleteLog(index) {
   volunteerEntries.splice(index, 1);
   saveEntriesToStorage();
   renderTable();
 }
+
+/**
+ * Handle form submission:
+ *  - prevent page reload
+ *  - collect data
+ *  - validate and show errors
+ *  - push normalized entry to volunteerEntries if valid
+ */
+function handleVolunteerSubmit(event) {
+  event.preventDefault();
+  const form = event.target
+
+  const charityName = form.querySelector("#charityName");
+  const hours = form.querySelector("#hours");
+  const date = form.querySelector("#date");
+  const rating = form.querySelectorAll("input[name='rating']");
+
+  if (!charityName || !hours || !date || !rating){
+    return;
+  }
+   const entry = { 
+    id: Date.now(),
+    charityName,
+    hours: Number(hours),
+    date,
+    rating: Number(ratingValue),
+  };
+  volunteerEntries.push(entry);
+  saveEntriesToStorage();
+  renderTable();
+  form.reset();
+};
+
+// Get selected rating value
+  let ratingValue = "";
+  rating.forEach((input) => {
+    if (input.checked) {
+      ratingValue = input.value;
+    }
+  });
+
+// Initialize localStorage
+function initVolunteerTracker() {
+  volunteerEntries = localEntriesStorage();
+  renderTable();
+  const form =document.getElementById("volunter-form");
+  if (table) {
+    table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("deleteBtn")) {
+        deleteLog(Number(index));
+      }
+    })
+  }
+}
+
 
 /**
  * Validate the volunteer form values.
@@ -160,40 +210,8 @@ function showValidationErrors(errors) {
   });
 }
 
-/**
- * Handle form submission:
- *  - prevent page reload
- *  - collect data
- *  - validate and show errors
- *  - push normalized entry to volunteerEntries if valid
- */
-function handleVolunteerSubmit(event) {
-  event.preventDefault();
 
-  const form = event.target || document.getElementById("volunteer-form");
-  if (!form) return;
-
-  const charityNameInput = form.querySelector("#charityName");
-  const dateInput = form.querySelector("#date");
-  const hoursInput = form.querySelector("#hours");
-  const ratingInputs = form.querySelectorAll("input[name='rating']");
-
-  // Get selected rating value
-  let ratingValue = "";
-  ratingInputs.forEach((input) => {
-    if (input.checked) {
-      ratingValue = input.value;
-    }
-  });
-
-  // Collect raw data
-  const rawData = {
-    charityName: charityNameInput?.value ?? "",
-    date: dateInput?.value ?? "",
-    hours: hoursInput?.value ?? "",
-    rating: ratingValue,
-  };
-
+  
   // Validate
   const errors = validateVolunteerData(rawData);
 
@@ -205,11 +223,6 @@ function handleVolunteerSubmit(event) {
   // If valid, clear any old errors
   clearErrorSpans();
 
-  const entry = buildVolunteerEntry(rawData);
-  volunteerEntries.push(entry);
-
-  form.reset();
-}
 
 //  Wire up the form submit handler.
 function initVolunteerForm(formId = "volunteer-form") {
@@ -229,33 +242,16 @@ function initVolunteerTracker() {
   initVolunteerForm();
 }
 
-// Attach everything once DOM is ready
-  document.addEventListener("DOMContentLoaded", () => {
-    initVolunteerTracker();
-
-    const table = document.querySelector("#volunteerTable");
-    if (table) {
-      table.addEventListener("click", (e) => {
-        if (e.target.classList.contains("deleteBtn")) {
-          const index = e.target.getAttribute("data-index");
-          deleteLog(index);
-        }
-      });
-    }
-  });
-
-
+document.addEventListener("DOMContentLoaded", initVolunteerTracker)
 // Export for Jest (CommonJS) but keep browser compatibility.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
-    volunteerEntries,
     calculateTotalHours,
     deleteLog,
     validateVolunteerData,
     buildVolunteerEntry,
     handleVolunteerSubmit,
     initVolunteerForm,
-    syncEntriesFromStorage,
     saveEntriesToStorage,
     renderTable,
   };
