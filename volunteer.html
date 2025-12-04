@@ -78,34 +78,25 @@
       </section>
     </div>
     <div id="volunteer-logs">
-      <section id="volunteer-logs-section">
         <h2>Your Volunteer Logs</h2>
-        <table id="volunteer-logs-table">
+        <table id="volunteerTable">
           <thead>
             <tr>
               <th>Charity Name</th>
-              <th>Date</th>
               <th>Hours Volunteered</th>
-              <th>Rating</th>
+              <th>Date</th>
+              <th>Experience Rating</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Volunteer logs will be dynamically inserted here -->
-          </tbody>
+          <tbody></tbody> 
         </table>
-      </section>
+        <div id="summary">Total Volunteer Hours: 0</div>
     </div>
   </main>
   <footer>
     <p>&copy; 2025 PIXELL River Financial</p>
   </footer>
-
-  <script>
-   // Simple toggle for mobile nav
-    document.getElementById('menu-toggle').addEventListener('click', () => {
-      document.getElementById('navbar').classList.toggle('open');
-    });
-  </script>
   <script type="module" src="volunteer.js"></script>
 
 
