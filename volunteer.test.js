@@ -1,12 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-
 const {
-  volunteerEntries,
   validateVolunteerData,
   buildVolunteerEntry,
-  handleVolunteerSubmit,
 } = require("./volunteer.js");
 
 // Build DOM that matches volunteer.html
@@ -49,7 +46,6 @@ function setupDOM() {
           <span id="rating_error" class="error-message" hidden></span>
         </fieldset>
       </div>
-
       <button id="submit-button" type="submit">Submit</button>
     </form>
   `;
@@ -98,7 +94,7 @@ describe("volunteer form submission", () => {
     );
     expect(typeof entry.id).toBe("number");
   });
-  
+
 
 // test 
   test("submitting invalid or incomplete data shows validation errors in the DOM", () => {
@@ -127,6 +123,7 @@ describe("volunteer form submission", () => {
 });
 
 
+
 // UNIT TESTS
 describe("validateVolunteerData", () => {
   test("identifies empty required fields", () => {
@@ -134,7 +131,7 @@ describe("validateVolunteerData", () => {
       charityName: "",
       date: "",
       hours: "",
-      rating: "",
+      rating: "",.
     });
 
     expect(errors).toEqual(
@@ -237,3 +234,8 @@ describe("buildVolunteerEntry", () => {
     expect(typeof entry.id).toBe("number");
   });
 });
+
+
+
+
+

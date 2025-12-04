@@ -1,5 +1,6 @@
 // Community-Support-Tracker/volunteer.js
 
+<<<<<<< HEAD
 const VOLUNTEER_STORAGE_KEY = "volunteerEntries";
 // In-memory temporary data store
 const volunteerEntries = [];
@@ -9,6 +10,22 @@ function localEntriesStorage() {
   const raw = localStorage.getItem(VOLUNTEER_STORAGE_KEY);
   if (!raw) return [];
   
+=======
+// Constants
+const VOLUNTEER_STORAGE_KEY = "volunteerEntries";
+
+// In-memory temporary data store
+const volunteerEntries = [];
+
+
+// LocalStorage helpers
+ function localEntriesStorage(charityName, date, hours, rating) {
+  const raw = localStorage.getItem(VOLUNTEER_STORAGE_KEY);
+  if (raw) {
+    return[];
+  }
+
+>>>>>>> kailine_table_display
   try {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
@@ -32,6 +49,7 @@ function saveEntriesToStorage() {
   localStorage.setItem(VOLUNTEER_STORAGE_KEY, JSON.stringify(volunteerEntries));
 }
 
+<<<<<<< HEAD
 // Update summary section with total hours
 function renderTable() {
   const tbody = document.querySelector("#volunteerTable tbody");
@@ -77,6 +95,15 @@ document.querySelector("#volunteerTable").addEventListener("click", (e) => {
   }
 });
 
+=======
+//  Calculate total volunteer hours
+function calculateTotalHours() {
+  return volunteerEntries.reduce(
+    (sum, entry) => sum + Number(entry.hours || 0),
+    0
+  );
+} 
+>>>>>>> kailine_table_display
 
 
 /**
@@ -227,10 +254,39 @@ function initVolunteerForm(formId = "volunteer-form") {
   form.addEventListener("submit", handleVolunteerSubmit);
 }
 
+// Initialize the volunteer tracker app
+function initVolunteerTracker() {
+  syncEntriesFromStorage();
+  renderTable();
+  initVolunteerForm();
+}
+
+// Attach everything once DOM is ready
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    initVolunteerTracker();
+
+    const table = document.querySelector("#volunteerTable");
+    if (table) {
+      table.addEventListener("click", (e) => {
+        if (e.target.classList.contains("deleteBtn")) {
+          const index = e.target.getAttribute("data-index");
+          deleteLog(index);
+        }
+      });
+    }
+  });
+}
+
+
 // Export for Jest (CommonJS) but keep browser compatibility.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
+<<<<<<< HEAD
 
+=======
+    VOLUNTEER_STORAGE_KEY,
+>>>>>>> kailine_table_display
     volunteerEntries,
     calculateTotalHours,
     deleteLog,
@@ -238,8 +294,19 @@ if (typeof module !== "undefined" && module.exports) {
     buildVolunteerEntry,
     handleVolunteerSubmit,
     initVolunteerForm,
+<<<<<<< HEAD
     syncEntriesFromStorage,
     saveEntriesToStorage,
     renderTable,
+=======
+    localEntriesStorage,
+    syncEntriesFromStorage,
+    saveEntriesToStorage,
+    calculateTotalHours,
+    renderTable,
+    updateSummary,
+    deleteLog,
+    initVolunteerTracker,
+>>>>>>> kailine_table_display
   };
 }

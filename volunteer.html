@@ -75,7 +75,24 @@
           </div>
           <button id="submit-button" type="submit">Submit</button>
         </form>
-
+      </section>
+    </div>
+    <div id="volunteer-logs">
+      <section id="volunteer-logs-section">
+        <h2>Your Volunteer Logs</h2>
+        <table id="volunteer-logs-table">
+          <thead>
+            <tr>
+              <th>Charity Name</th>
+              <th>Date</th>
+              <th>Hours Volunteered</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Volunteer logs will be dynamically inserted here -->
+          </tbody>
+        </table>
       </section>
     </div>
   </main>
@@ -89,12 +106,8 @@
       document.getElementById('navbar').classList.toggle('open');
     });
   </script>
-  <script src="volunteer.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      initVolunteerForm(); // uses the global function defined in volunteer.js
-    });
-  </script>
+  <script type="module" src="volunteer.js"></script>
+
 
 
 </body>
