@@ -2,128 +2,9 @@
 
 const STORAGE_KEY = "volunteerEntries";
 // In-memory temporary data store
-const volunteerEntries = [];
+let volunteerEntries = [];
 
-
-// LocalStorage helpers
- function localEntriesStorage() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    return[];
-  }
-
-  try {
-    const parsed = JSON.parse(raw);
-  return Array.isArray(parsed) ? parsed : [];
-  } catch  {
-    return [];
-  }
-}
-
-// Save in-memory entries to localStorage
-function saveEntriesToStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(volunteerEntries));
-}
-
-// Calculate total hours volunteered
-function calculateTotalHours() {
-  return volunteerEntries.reduce(
-    (sum, entry) => sum + Number(entry.hoursVolunteered || 0), 0);
-}
-
-// Update Summary
-function updateSummary() {
-  const total = calculateTotalHours();
-  const summaryDiv = document.getElementById("summary");
-  if (summaryDiv) {
-    summaryDiv.textContent = `Total Volunteer Hours: ${total}`;
-  }
-}
-
-// Update summary section with total hours
-function renderTable() {
-  const tbody = document.querySelector("#volunteerTable tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  volunteerEntries.forEach((entry, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${entry.charityName}</td>
-      <td>${entry.hours}</td>
-      <td>${entry.date}</td>
-      <td>${entry.rating}</td>
-      <td><button data-index="${index}" class="deleteBtn">Delete</button></td>
-    `;
-    tbody.appendChild(row);
-  });
-
-  updateSummary();
-}
-
-
-// Delete a volunteer entry by index
- function deleteLog(index) {
-  volunteerEntries.splice(index, 1);
-  saveEntriesToStorage();
-  renderTable();
-}
-
-/**
- * Handle form submission:
- *  - prevent page reload
- *  - collect data
- *  - validate and show errors
- *  - push normalized entry to volunteerEntries if valid
- */
-function handleVolunteerSubmit(event) {
-  event.preventDefault();
-  const form = event.target
-
-  const charityName = form.querySelector("#charityName");
-  const hours = form.querySelector("#hours");
-  const date = form.querySelector("#date");
-  const rating = form.querySelectorAll("input[name='rating']");
-
-  if (!charityName || !hours || !date || !rating){
-    return;
-  }
-   const entry = { 
-    id: Date.now(),
-    charityName,
-    hours: Number(hours),
-    date,
-    rating: Number(ratingValue),
-  };
-  volunteerEntries.push(entry);
-  saveEntriesToStorage();
-  renderTable();
-  form.reset();
-};
-
-// Get selected rating value
-  let ratingValue = "";
-  rating.forEach((input) => {
-    if (input.checked) {
-      ratingValue = input.value;
-    }
-  });
-
-// Initialize localStorage
-function initVolunteerTracker() {
-  volunteerEntries = localEntriesStorage();
-  renderTable();
-  const form =document.getElementById("volunter-form");
-  if (table) {
-    table.addEventListener("click", (e) => {
-      if (e.target.classList.contains("deleteBtn")) {
-        deleteLog(Number(index));
-      }
-    })
-  }
-}
-
-
+// Stage One 
 /**
  * Validate the volunteer form values.
  * Returns an array of error messages (empty if valid).
@@ -192,39 +73,137 @@ function showValidationErrors(errors) {
     let spanId = null;
 
     if (msg.includes("Charity Name")) {
-      spanId = "charityName_error";
-    } else if (msg.includes("Date")) {
-      spanId = "date_error";
-    } else if (msg.includes("Hours Volunteered")) {
-      spanId = "hours_error";
-    } else if (msg.includes("Volunteer Experience Rating")) {
-      spanId = "rating_error";
+    spanId = "charityName_error";
+   } else if (msg.includes("Date")) {
+    spanId = "date_error";
+   } else if (msg.includes("Hours Volunteered")) {
+    spanId = "hours_error";
+   } else if (msg.includes("Volunteer Experience Rating")) {
+    spanId = "rating_error";
+   }
+
+    if (spanId) {
+      const span = document.getElementById(spanId);
+      if (span) {
+        span.textContent = msg;
+        span.hidden = false;
+      }
     }
-
-    if (!spanId) return;
-    const span = document.getElementById(spanId);
-    if (!span) return;
-
-    span.textContent = msg;
-    span.hidden = false;
   });
 }
 
+/**
+ * Handle form submission:
+ *  - prevent page reload
+ *  - collect data
+ *  - validate and show errors
+ *  - push normalized entry to volunteerEntries if valid
+ */
+function handleVolunteerSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  let ratingValue = "";
+  const ratingInputs = form.querySelectorAll("input[name='rating']");
+  ratingInputs.forEach((input) => {
+    if (input.checked) ratingValue = input.value;
+  });
 
-  
-  // Validate
-  const errors = validateVolunteerData(rawData);
+  const rawData = {
+   charityName: form.charityName.value.trim(),
+   date: form.date.value,
+   hours:form.hours.value,
+   rating: ratingValue, 
+  };
 
+ const errors = validateVolunteerData(rawData);
   if (errors.length > 0) {
     showValidationErrors(errors);
-    return;
+    return; 
   }
 
-  // If valid, clear any old errors
+  // Clear old errors
   clearErrorSpans();
 
+  // Build normalized entry
+  const entry = buildVolunteerEntry(rawData);
 
-//  Wire up the form submit handler.
+  // Push to in‑memory array
+  volunteerEntries.push(entry);
+
+  // Stage Two: persist + render
+  saveEntriesToStorage();
+  renderTable();
+
+  // Reset form
+  form.reset();
+}
+
+// Stage Two Persistence + Table 
+
+// LocalStorage helpers
+ function localEntriesStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+// Sync in-memory entries from localStorage
+function syncEntriesFromStorage() {
+  volunteerEntries = localEntriesStorage();
+}
+
+// Save in-memory entries to localStorage
+function saveEntriesToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(volunteerEntries));
+}
+
+// Calculate total hours volunteered
+function calculateTotalHours() {
+  return volunteerEntries.reduce(
+    (sum, entry) => sum + Number(entry.hours || 0), 0);
+}
+
+// Update Summary
+function updateSummary() {
+  const summaryDiv = document.getElementById("summary");
+  if (summaryDiv) {
+    summaryDiv.textContent = `Total Volunteer Hours: ${calculateTotalHours()}`;
+  }
+}
+
+// Update summary section with total hours
+function renderTable() {
+  const tbody = document.querySelector("#volunteerTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  volunteerEntries.forEach((entry, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${entry.charityName}</td>
+      <td>${entry.hours}</td>
+      <td>${entry.date}</td>
+      <td><button data-index="${index}" class="deleteBtn">Delete</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  updateSummary();
+}
+
+// Delete a volunteer entry by index
+ function deleteLog(index) {
+  volunteerEntries.splice(index, 1);
+  saveEntriesToStorage();
+  renderTable();
+}
+
+// Initialize form event listener
 function initVolunteerForm(formId = "volunteer-form") {
   const form = document.getElementById(formId);
   if (!form) {
@@ -232,17 +211,38 @@ function initVolunteerForm(formId = "volunteer-form") {
     return;
   }
 
+  // Attach submit handler
   form.addEventListener("submit", handleVolunteerSubmit);
+
+  //Attach input listeners to clear errors automatically
+  document.querySelectorAll("#volunteer-form input").forEach((input) => {
+    input.addEventListener("input", () => {
+      clearErrorSpans();
+    });
+  });
 }
 
-// Initialize the volunteer tracker app
+
+
+// Initialize localStorage
 function initVolunteerTracker() {
   syncEntriesFromStorage();
   renderTable();
   initVolunteerForm();
+
+  const table = document.getElementById("volunteerTable");
+  if (table) {
+    table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("deleteBtn")) {
+        const index = e.target.dataset.index;
+        deleteLog(Number(index));
+      }
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initVolunteerTracker)
+
 // Export for Jest (CommonJS) but keep browser compatibility.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
