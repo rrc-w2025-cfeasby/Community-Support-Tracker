@@ -161,6 +161,109 @@ button[type="submit"]:hover {
     gap: 0.5rem;
 }
 
+/* Signup Table Styles */
+#signup-section{
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#signup-section h2{
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #0077CC;
+}
+
+#signup-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background-color: #FFF;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+#signup-table th,
+#signup-table td{
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #CCC;
+    color: #333;
+}
+
+#signup-table th{
+    background-color: #0077CC;
+    color: #FFF;
+    font-weight: bold;
+}
+
+#signup-table tr:nth-child(even){
+    background-color: #F9F9F9;
+}
+
+#signup-table tr:hover{
+    background-color: #E3F2FD; 
+}
+
+.delete-btn{
+    background-color: #D32F2F;
+    color: #FFF;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #B00020;
+}
+
+/* Summary Section Styles */
+#summary-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#summary-section h2{
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #0077CC;
+}
+
+#summary-content{
+    font-size: 1rem;
+    color: #333;
+}
+
+#summary-content ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#summary-content li{
+    background-color: #FFF;
+    margin: 0.5rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #CCC;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
+}
+
+#summary-content li:hover{
+    background-color: #E3F2Fd;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
   header{
@@ -207,4 +310,44 @@ button[type="submit"]:hover {
       right: 1rem;
       z-index: 1000;
   }
+  #signup-table, 
+  #signup-table thead, 
+  #signup-table tbody, 
+  #signup-table th, 
+  #signup-table td, 
+  #signup-table tr {
+    display: block;
+  }
+
+  #signup-table thead {
+    display: none; /* hide header row */
+  }
+
+  #signup-table tr {
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border: 1px solid #CCC;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 0.75rem;
+  }
+
+  #signup-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border: none;
+    border-bottom: 1px solid #EEE;
+  }
+
+  #signup-table td:last-child {
+    border-bottom: none;
+  }
+
+  #signup-table td::before {
+    content: attr(data-label); /* use data-label for headers */
+    font-weight: bold;
+    color: #0077CC;
+  }
+
 }

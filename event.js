@@ -95,6 +95,130 @@ function validateForm(){
 }
 
 /**
+ * displaySignups - Displays signups in the table
+ * @param {Array} signups - Array of signup objects
+ * Each object should have: { eventName, participantName, email, role }
+ */
+function displaySignups(signups){
+    const tableBody = document.querySelector("#signup-table tbody");
+
+    // Clear previous rows
+    tableBody.innerHTML = "";
+
+    // Render each signup
+    signups.forEach(({ eventName, participantName, email, role }) => {
+        const row = document.createElement("tr");
+
+        const eventCell = document.createElement("td");
+        eventCell.textContent = eventName;
+        eventCell.setAttribute("data-label", "Event Name");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = participantName;
+        nameCell.setAttribute("data-label", "Participant Name");
+
+        const emailCell = document.createElement("td");
+        emailCell.textContent = email;
+        emailCell.setAttribute("data-label", "Email");
+
+        const roleCell = document.createElement("td");
+        roleCell.textContent = role;
+        roleCell.setAttribute("data-label", "Role");
+
+        const deleteCell = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("delete-btn");
+        deleteCell.setAttribute("data-label", "Delete");
+
+        // Delete button removes signup from localStorage + refreshes table
+        deleteButton.addEventListener("click", () => {
+            // Confirmation prompt
+            const confirmDelete = window.confirm(
+                `Are you sure you want to delete the signup for ${participantName}?`
+            );
+            
+            // Cancel is user clicks Cancel
+            if(!confirmDelete) return;
+
+            let storedSignups = loadSignups();
+            storedSignups = storedSignups.filter(s => !(s.eventName === eventName && s.email === email));
+            localStorage.setItem("eventSignups", JSON.stringify(storedSignups));
+            displaySignups(storedSignups);
+            updateSummary();
+        });
+        deleteCell.appendChild(deleteButton);
+
+        row.appendChild(eventCell);
+        row.appendChild(nameCell);
+        row.appendChild(emailCell);
+        row.appendChild(roleCell);
+        row.appendChild(deleteCell);
+
+        tableBody.appendChild(row);
+    });
+}
+
+/**
+ * saveSignup - Saves a signup to localStorage
+ * @param {Object} signup - The signup object
+ * { eventName, participantName, email, role }
+ */
+function saveSignup(signup){
+    if(!signup || !signup.eventName || !signup.participantName || !signup.email || !signup.role) return;
+
+    // Get existing signups from localStorage
+    const storedSignups = JSON.parse(localStorage.getItem("eventSignups")) || [];
+
+    // Add new signup
+    storedSignups.push(signup);
+
+    // Save back to localStorage
+    localStorage.setItem("eventSignups", JSON.stringify(storedSignups));
+}
+
+/**
+ * loadSignups - Load signups from localStorage
+ * @returns {Array} signups
+ */
+function loadSignups(){
+    return JSON.parse(localStorage.getItem("eventSignups")) || [];
+}
+
+/**
+ * updateSummary - Updates the upcoming events summary by role
+ */
+function updateSummary(){
+    const summaryDiv = document.getElementById("summary-content");
+    summaryDiv.innerHTML = "";
+
+    const signups = loadSignups();
+
+    // Count signups by role
+    const roleCounts = {};
+    signups.forEach(({ role }) => {
+        if (!roleCounts[role]) {
+            roleCounts[role] = 0;
+        }
+        roleCounts[role]++;
+    });
+
+    // Render summary
+    if(signups.length === 0){
+        summaryDiv.textContent = "No signups yet.";
+        returns;
+    }
+
+    const list = document.createElement("ul");
+    Object.entries(roleCounts).forEach(([role, count]) => {
+        const li = document.createElement("li");
+        li.textContent = `${role}: ${count}`;
+        list.appendChild(li);
+    });
+
+    summaryDiv.appendChild(list);
+}
+/**
  * Handle the Form Submit
  * 
  * @param {event} event - The event processed
@@ -143,6 +267,15 @@ function handleFormSubmit(event) {
         return;
     }
 
+    // Save signup to localStorage
+    const signup = {
+        eventName,
+        participantName: repName,
+        email: repEmail,
+        role
+    };
+    saveSignup(signup);
+
     // Store in temporary object
     const tempData = {
         eventName,
@@ -152,11 +285,23 @@ function handleFormSubmit(event) {
     };
 
     console.log("Form Submitted:", tempData);
+
+    // Refresh table
+    displaySignups(loadSignups());
+    updateSummary();
     
     const p = document.createElement('p');
     p.textContent = 'Form submitted successfully!';
     p.style.color = 'green';
     feedbackDiv.appendChild(p);
+
+    // Clear form
+    event.target.reset();
+
+    // Wait 3 seconds and clear the feedbackDiv
+    setTimeout(() => {
+        feedbackDiv.innerHTML = "";
+    }, 3000);
 }
 
 /**
@@ -177,4 +322,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('signup-form');
     form.addEventListener('submit', handleFormSubmit);
+
+    // Load persisted signups into table on page load
+    displaySignups(loadSignups());
+
+    updateSummary();
 });
