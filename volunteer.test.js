@@ -53,12 +53,10 @@ function setupDOM() {
 
 beforeEach(() => {
   setupDOM();
-  volunteerEntries.length = 0;
-  document.body.innerHTML = `
-    <table id="volunteerTable"><tbody></tbody></table>
-    <div id="summary"></div>
-  `;
+  volunteerEntries.length = 0; // clear temp data
 });
+
+
 
 // INTEGRATION TESTS
 describe("volunteer form submission", () => {
