@@ -109,11 +109,13 @@ function handleVolunteerSubmit(event) {
   });
 
   const rawData = {
-    charityName: document.getElementById("charityName").value.trim(),
-    date: document.getElementById("date").value,
-    hours: document.getElementById("hours").value,
+    charityName: form.elements["charityName"].value.trim(),
+    date: form.elements["date"].value,
+    hours: form.elements["hours"].value,
     rating: ratingValue,
   };
+
+
 
  const errors = validateVolunteerData(rawData);
   if (errors.length > 0) {
@@ -154,7 +156,11 @@ function handleVolunteerSubmit(event) {
 
 // Sync in-memory entries from localStorage
 function syncEntriesFromStorage() {
-  volunteerEntries = localEntriesStorage();
+  const stored = localStorage.getItem("volunteerEntries");
+  volunteerEntries.length = 0;
+  if (stored) {
+    JSON.parse(stored).forEach(e => volunteerEntries.push(e));
+  }
 }
 
 // Save in-memory entries to localStorage
@@ -164,8 +170,7 @@ function saveEntriesToStorage() {
 
 // Calculate total hours volunteered
 function calculateTotalHours() {
-  return volunteerEntries.reduce(
-    (sum, entry) => sum + Number(entry.hours || 0), 0);
+  return volunteerEntries.reduce((sum, e) => sum + Number(e.hours), 0);
 }
 
 // Update Summary
@@ -181,19 +186,20 @@ function renderTable() {
   const tbody = document.querySelector("#volunteerTable tbody");
   if (!tbody) return;
   tbody.innerHTML = "";
-
-  volunteerEntries.forEach((entry, index) => {
+  volunteerEntries.forEach(entry => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${entry.charityName}</td>
-      <td>${entry.hours}</td>
       <td>${entry.date}</td>
-      <td><button data-index="${index}" class="deleteBtn">Delete</button></td>
+      <td>${entry.hours}</td>
+      <td>${entry.rating}</td>
     `;
     tbody.appendChild(row);
   });
-
-  updateSummary();
+  const summary = document.getElementById("summary");
+  if (summary) {
+    summary.textContent = `Total Volunteer Hours: ${calculateTotalHours()}`;
+  }
 }
 
 // Delete a volunteer entry by index
@@ -222,8 +228,6 @@ function initVolunteerForm(formId = "volunteer-form") {
   });
 }
 
-
-
 // Initialize localStorage
 function initVolunteerTracker() {
   syncEntriesFromStorage();
@@ -244,16 +248,14 @@ function initVolunteerTracker() {
 document.addEventListener("DOMContentLoaded", initVolunteerTracker)
 
 // Export for Jest (CommonJS) but keep browser compatibility.
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    calculateTotalHours,
-    deleteLog,
-    validateVolunteerData,
-    buildVolunteerEntry,
-    handleVolunteerSubmit,
-    initVolunteerForm,
-    saveEntriesToStorage,
-    renderTable,
-    volunteerEntries,
-  };
-}
+module.exports = {
+  validateVolunteerData,
+  buildVolunteerEntry,
+  handleVolunteerSubmit,
+  volunteerEntries,
+  saveEntriesToStorage,
+  syncEntriesFromStorage,
+  renderTable,
+  calculateTotalHours,
+  deleteLog,
+};
