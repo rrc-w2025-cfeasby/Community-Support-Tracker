@@ -66,7 +66,7 @@ nav.open ul {
 }
 
 #section3 {
-    background-color: #F48FB1;
+    background-color:  #F5F5F5;
     padding: 1rem;
 }
 
@@ -249,3 +249,62 @@ color: gold;
   .star-rating input:checked ~ label {
     color: gold;
   }
+
+  /* Summary Styles */
+ #summary {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #eef6f9;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-left: 4px solid #3498db;
+  border-radius: 4px;
+  text-align: right;
+}
+
+.deleteBtn {
+  background-color: #34495e;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+.deleteBtn:hover {
+  background-color: #c0392b;
+}
+
+#volunteerTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+#volunteerTable th,
+#volunteerTable td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+#volunteerTable th {
+  background-color: #f4f6f8;
+  color: #333;
+  font-weight: 600;
+}
+
+#volunteerTable tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+#volunteerTable tr:hover {
+  background-color: #f0f8ff;
+}

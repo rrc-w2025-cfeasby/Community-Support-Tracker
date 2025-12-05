@@ -1,8 +1,10 @@
 // Community-Support-Tracker/volunteer.js
 
+const STORAGE_KEY = "volunteerEntries";
 // In-memory temporary data store
-const volunteerEntries = [];
+let volunteerEntries = [];
 
+// Stage One 
 /**
  * Validate the volunteer form values.
  * Returns an array of error messages (empty if valid).
@@ -63,7 +65,6 @@ function buildVolunteerEntry({ charityName, date, hours, rating }) {
   });
 }
 
-
 //Show validation errors mapped to each field's <span>.
 function showValidationErrors(errors) {
   clearErrorSpans();
@@ -72,21 +73,22 @@ function showValidationErrors(errors) {
     let spanId = null;
 
     if (msg.includes("Charity Name")) {
-      spanId = "charityName_error";
-    } else if (msg.includes("Date")) {
-      spanId = "date_error";
-    } else if (msg.includes("Hours Volunteered")) {
-      spanId = "hours_error";
-    } else if (msg.includes("Volunteer Experience Rating")) {
-      spanId = "rating_error";
+    spanId = "charityName_error";
+   } else if (msg.includes("Date")) {
+    spanId = "date_error";
+   } else if (msg.includes("Hours Volunteered")) {
+    spanId = "hours_error";
+   } else if (msg.includes("Volunteer Experience Rating")) {
+    spanId = "rating_error";
+   }
+
+    if (spanId) {
+      const span = document.getElementById(spanId);
+      if (span) {
+        span.textContent = msg;
+        span.hidden = false;
+      }
     }
-
-    if (!spanId) return;
-    const span = document.getElementById(spanId);
-    if (!span) return;
-
-    span.textContent = msg;
-    span.hidden = false;
   });
 }
 
@@ -99,49 +101,113 @@ function showValidationErrors(errors) {
  */
 function handleVolunteerSubmit(event) {
   event.preventDefault();
-
-  const form = event.target || document.getElementById("volunteer-form");
-  if (!form) return;
-
-  const charityNameInput = form.querySelector("#charityName");
-  const dateInput = form.querySelector("#date");
-  const hoursInput = form.querySelector("#hours");
-  const ratingInputs = form.querySelectorAll("input[name='rating']");
-
-  // Get selected rating value
+  const form = event.target;
   let ratingValue = "";
+  const ratingInputs = form.querySelectorAll("input[name='rating']");
   ratingInputs.forEach((input) => {
-    if (input.checked) {
-      ratingValue = input.value;
-    }
+    if (input.checked) ratingValue = input.value;
   });
 
-  // Collect raw data
   const rawData = {
-    charityName: charityNameInput?.value ?? "",
-    date: dateInput?.value ?? "",
-    hours: hoursInput?.value ?? "",
+    charityName: form.elements["charityName"].value.trim(),
+    date: form.elements["date"].value,
+    hours: form.elements["hours"].value,
     rating: ratingValue,
   };
 
-  // Validate
-  const errors = validateVolunteerData(rawData);
 
+
+ const errors = validateVolunteerData(rawData);
   if (errors.length > 0) {
     showValidationErrors(errors);
-    return;
+    return; 
   }
 
-  // If valid, clear any old errors
+  // Clear old errors
   clearErrorSpans();
 
+  // Build normalized entry
   const entry = buildVolunteerEntry(rawData);
+
+  // Push to in‑memory array
   volunteerEntries.push(entry);
 
+  // Stage Two: persist + render
+  saveEntriesToStorage();
+  renderTable();
+
+  // Reset form
   form.reset();
 }
 
-//  Wire up the form submit handler.
+// Stage Two Persistence + Table 
+
+// LocalStorage helpers
+ function localEntriesStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+// Sync in-memory entries from localStorage
+function syncEntriesFromStorage() {
+  const storedEntries = localEntriesStorage();
+  volunteerEntries.length = 0;
+  volunteerEntries.push(...storedEntries);
+}
+
+// Save in-memory entries to localStorage
+function saveEntriesToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(volunteerEntries));
+}
+
+// Calculate total hours volunteered
+function calculateTotalHours() {
+  return volunteerEntries.reduce((sum, e) => sum + Number(e.hours), 0);
+}
+
+// Update Summary
+function updateSummary() {
+  const summaryDiv = document.getElementById("summary");
+  if (summaryDiv) {
+    summaryDiv.textContent = `Total Volunteer Hours: ${calculateTotalHours()}`;
+  }
+}
+
+// Update summary section with total hours
+function renderTable() {
+  const tbody = document.querySelector("#volunteerTable tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  volunteerEntries.forEach(entry => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${entry.charityName}</td>
+      <td>${entry.date}</td>
+      <td>${entry.hours}</td>
+      <td>${entry.rating}</td>
+    `;
+    tbody.appendChild(row);
+  });
+  const summary = document.getElementById("summary");
+  if (summary) {
+    summary.textContent = `Total Volunteer Hours: ${calculateTotalHours()}`;
+  }
+}
+
+// Delete a volunteer entry by index
+ function deleteLog(index) {
+  volunteerEntries.splice(index, 1);
+  saveEntriesToStorage();
+  renderTable();
+}
+
+// Initialize form event listener
 function initVolunteerForm(formId = "volunteer-form") {
   const form = document.getElementById(formId);
   if (!form) {
@@ -149,16 +215,49 @@ function initVolunteerForm(formId = "volunteer-form") {
     return;
   }
 
+  // Attach submit handler
   form.addEventListener("submit", handleVolunteerSubmit);
+
+  //Attach input listeners to clear errors automatically
+  document.querySelectorAll("#volunteer-form input").forEach((input) => {
+    input.addEventListener("input", () => {
+      clearErrorSpans();
+    });
+  });
 }
+
+// Initialize localStorage
+function initVolunteerTracker() {
+  syncEntriesFromStorage();
+  renderTable();
+  initVolunteerForm();
+
+  const table = document.getElementById("volunteerTable");
+  if (table) {
+    table.addEventListener("click", (e) => {
+      if (e.target.classList.contains("deleteBtn")) {
+        const index = e.target.dataset.index;
+        deleteLog(Number(index));
+      }
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initVolunteerTracker)
 
 // Export for Jest (CommonJS) but keep browser compatibility.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
-    volunteerEntries,
     validateVolunteerData,
     buildVolunteerEntry,
     handleVolunteerSubmit,
-    initVolunteerForm,
+    volunteerEntries,
+    syncEntriesFromStorage,
+    renderTable,
+    saveEntriesToStorage,
+    calculateTotalHours,
+    deleteLog,
   };
 }
+
+

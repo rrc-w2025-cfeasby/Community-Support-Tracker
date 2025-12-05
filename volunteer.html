@@ -1,7 +1,5 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,52 +49,52 @@
           </div>
           <!-- Rating: 1–5 -->
           <div class="field-group">
-          <fieldset>
-            <legend>Volunteer Experience Rating (1–5 Stars)</legend>
-            <div class="star-rating">
-              <input type="radio" id="star5" name="rating" value="5">
-              <label for="star5">★</label>
+            <fieldset>
+              <legend>Volunteer Experience Rating (1–5 Stars)</legend>
+              <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5">
+                <label for="star5">★</label>
 
-              <input type="radio" id="star4" name="rating" value="4">
-              <label for="star4">★</label>
+                <input type="radio" id="star4" name="rating" value="4">
+                <label for="star4">★</label>
 
-              <input type="radio" id="star3" name="rating" value="3">
-              <label for="star3">★</label>
+                <input type="radio" id="star3" name="rating" value="3">
+                <label for="star3">★</label>
 
-              <input type="radio" id="star2" name="rating" value="2">
-              <label for="star2">★</label>
+                <input type="radio" id="star2" name="rating" value="2">
+                <label for="star2">★</label>
 
-              <input type="radio" id="star1" name="rating" value="1">
-              <label for="star1">★</label>
-            </div>
-
-            <span id="rating_error" class="error-message" hidden></span>
-          </fieldset>
+                <input type="radio" id="star1" name="rating" value="1">
+                <label for="star1">★</label>
+              </div>
+              <span id="rating_error" class="error-message" hidden></span>
+            </fieldset>
           </div>
           <button id="submit-button" type="submit">Submit</button>
         </form>
-
+      </section>
+    </div>
+    <div id="volunteer-logs">
+      <section id="section3">
+        <h2>Your Volunteer Logs</h2>
+        <table id="volunteerTable">
+          <thead>
+            <tr>
+              <th>Charity Name</th>
+              <th>Hours Volunteered</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody> 
+        </table>
+        <div id="summary">Total Volunteer Hours: 0</div>
       </section>
     </div>
   </main>
   <footer>
     <p>&copy; 2025 PIXELL River Financial</p>
   </footer>
-
-  <script>
-   // Simple toggle for mobile nav
-    document.getElementById('menu-toggle').addEventListener('click', () => {
-      document.getElementById('navbar').classList.toggle('open');
-    });
-  </script>
-  <script src="volunteer.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      initVolunteerForm(); // uses the global function defined in volunteer.js
-    });
-  </script>
-
-
+  <script type="module" src="volunteer.js"></script>
 </body>
-
 </html>
